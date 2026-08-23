@@ -1,0 +1,77 @@
+# OnePlus 13T Resources
+
+一加 13T（`PKX110` / `OP60F5L1` / `pagani`）资料与实机研究记录。
+
+本仓库不是“一键刷机包”，也不把论坛转述当成事实。目标是把设备资料、源码版本、实机测试、失败路径和恢复边界整理成可追溯、可复核的知识库。
+
+> **高风险提醒**  
+> 解锁、刷写、切换槽位、格式化、恢复分区均可能导致数据丢失或设备无法启动。仓库中的历史记录不等于针对另一台设备的操作授权；执行前必须重新确认设备、版本、槽位、文件哈希和回滚路径。
+
+## 当前已知状态
+
+最后核验：**2026-08-23**。
+
+| 项目 | 已确认结论 | 证据等级 |
+|---|---|---|
+| 设备身份 | OnePlus 13T；`PKX110` / `OP60F5L1` / `pagani`；SM8750 `sun`；project `24821` | 实机确认 |
+| Stock 历史基线 | `PKX110_15.0.2.302(CN01)`，Android 15；完整 OTA、payload 和已提取镜像完成哈希/签名校验 | 主机与实机确认 |
+| 当前救援槽 | 2026-08-16 时 slot A 为可启动的 ColorOS `16.0.3.501(CN01)` | 实机确认 |
+| 当前测试系统 | slot B 成功启动 LineageOS 23.2 非官方构建，Android 16，kernel 6.6.142 | 实机确认 |
+| TWRP | `recovery_b` 上的 TWRP 3.7.1_16 已通过启动、触控、ADB、FBE 解密、MTP 读取、OTG 等非破坏性测试 | 实机确认 |
+| 指纹 | UDFPS 录入仍失败；OPlus HAL 等待 UI-ready 约 502 ms 后以 vendor error `15001` 退出 | 实机日志确认 |
+| 蜂窝网络 | NR SA、数据和通话链路正常；低信号格主要是 AOSP NR 阈值/CarrierConfig 映射问题 | 实机日志确认 |
+| GApps 事件 | Google Clock 缺少两项 priv-app allowlist 权限造成 `system_server` 循环崩溃；随后 `UnInstall.zip` 流程移除了多项 Google 应用 | 实机日志确认 |
+
+完整状态见 [设备与版本基线](docs/device-baseline.md)、[LineageOS 记录](docs/lineageos-23.2.md) 和 [GApps 事件记录](docs/gapps.md)。
+
+## 导航
+
+- [记录方法与证据等级](docs/methodology.md)
+- [设备与版本基线](docs/device-baseline.md)
+- [TWRP 研究与实机验证](docs/twrp.md)
+- [LineageOS 23.2 构建、安装与硬件状态](docs/lineageos-23.2.md)
+- [GApps / NikGapps 事件记录](docs/gapps.md)
+- [备份与恢复边界](docs/backup-and-recovery.md)
+- [AOSP 源码差异审计摘要](docs/aosp-gap-audit.md)
+- [来源索引（机器可读）](data/source-index.yaml)
+- [功能差异矩阵（TSV）](data/feature-matrix.tsv)
+- [参与和提交规则](CONTRIBUTING.md)
+
+## 仓库怎样记录信息
+
+本仓库采用“**文档是事实库，Issue 是收件箱**”的模式：
+
+1. `README.md` 只保留设备身份、关键警告和当前摘要。
+2. `docs/` 保存经过整理的事实、实验时间线、失败结论和边界。
+3. `data/source-index.yaml` 保存来源类别、URL、分支、冻结 commit、检查日期和可信状态。
+4. `data/feature-matrix.tsv` 保存适配差异，方便脚本或表格工具处理。
+5. Issue Form 用于提交新链接或测试结果；未经核验的信息不会直接写成事实。
+6. 每次更新通过 Git commit 留下变更原因；会变化的上游状态同时保留“当时冻结值”和“最近检查值”。
+
+## 证据等级
+
+| 标签 | 含义 |
+|---|---|
+| `DEVICE_VERIFIED` | 在明确记录的 PKX110 环境中实机观察并留有日志 |
+| `HOST_VERIFIED` | 文件、源码、OTA、镜像或构建产物在主机侧完成解析/哈希/签名检查 |
+| `SOURCE_VERIFIED` | 已直接读取上游源码、提交或官方文档 |
+| `UPSTREAM_CLAIM` | 上游 README 或发布页声明，但本机尚未复测 |
+| `HYPOTHESIS` | 有证据支持的解释，仍缺决定性验证 |
+| `NOT_TESTED` | 明确没有测试；不得写成“支持”或“可用” |
+| `SUPERSEDED` | 曾经正确，但已被后续测试或设备状态替代 |
+
+## 资料边界
+
+- 不上传 ColorOS OTA、专有 vendor blobs、Google APK、个人日志、截图、备份镜像、密钥或设备标识。
+- 大型二进制不进入 Git 历史；必要时只记录可信来源、文件名、版本和校验值。
+- 不公开本机绝对路径、ADB 序列号、账户信息、SIM/Wi-Fi 信息或认证材料。
+- 本仓库明确不采纳或转录来自 **CoolApk（酷安）** 的内容。
+- 第三方仓库和文件各自遵循其原许可证；本仓库的链接不代表重新授权或背书。
+
+## 目前最重要的待办
+
+1. 以当前 Android 16 framework 为基线补齐 UDFPS `notify_fppress` / UI-ready 依赖链，并做回归测试。
+2. 从 `.501` product/CarrierSettings 确认中国运营商的真实 NR 信号格阈值；不要通过更换 modem/firmware 解决 UI 映射问题。
+3. 重新构建包含正确 Google Clock priv-app allowlist 的 GApps 方案，并以干净安装流程验证；临时 `log` 模式不能当永久修复。
+4. 为蓝牙配对、GNSS 实际定位、相机实拍和长时间通话补充可复现的实机记录。
+
