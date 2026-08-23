@@ -1,5 +1,5 @@
 schema_version: 2
-last_checked: "2026-08-23"
+last_checked: "2026-08-24"
 device:
   marketing_name: "OnePlus 13T"
   model: "PKX110"
@@ -15,6 +15,7 @@ source_policy:
   excluded:
     - "CoolApk posts, screenshots, reposts, and conclusions derived only from CoolApk, except the exact account and topic scope listed under community_source_exceptions"
   raw_artifacts_committed: false
+  scoped_context_images_committed: true
 
 community_source_exceptions:
   - platform: "CoolApk"
@@ -37,6 +38,36 @@ community_source_exceptions:
     status: "COMMUNITY_CLUE + NOT_TESTED_ON_LINEAGE"
     binary_redistribution: false
     note: "The linked GitHub repository is the primary technical source; the screenshot is contextual evidence only."
+  - platform: "CoolApk"
+    account_name: "INT16 (reply) / 好好335 (context)"
+    profile_url: null
+    account_id: null
+    scope: "The supplied screenshot discussion about OplusFodShim, AOD, screen-off fingerprint, and a candidate OnePlus 13T UDFPS implementation only"
+    exact_post_url: null
+    attribution_basis: "user-supplied screenshot; exact post URL is not shown"
+    status: "COMMUNITY_CLUE + NOT_TESTED"
+    binary_redistribution: false
+    note: "The screenshot is committed as scoped context; the associated RandomLemon repository must be reviewed independently."
+  - platform: "CoolApk"
+    account_name: "Synecdoche (reply) / 碳基生物酱 (context)"
+    profile_url: null
+    account_id: null
+    scope: "The supplied screenshot clue to search extracted stock firmware for display_config when investigating HDR display behavior only"
+    exact_post_url: null
+    attribution_basis: "user-supplied screenshot; visible reply date is June 4, but year and exact post URL are not shown"
+    status: "COMMUNITY_CLUE + NOT_TESTED_ON_PAGANI"
+    binary_redistribution: false
+    note: "The discussion concerns another SM8750 device and is not evidence of a OnePlus 13T fix."
+  - platform: "CoolApk"
+    account_name: "Synecdoche (reply) / kipfel猫猫 (context)"
+    profile_url: null
+    account_id: null
+    scope: "The supplied screenshot clue describing finger-down event monitoring and writes to /sys/kernel/oplus_display/notify_fppress only"
+    exact_post_url: null
+    attribution_basis: "user-supplied screenshot; visible date is 2025-12-21, exact post URL is not shown"
+    status: "COMMUNITY_CLUE + NOT_TESTED"
+    binary_redistribution: false
+    note: "A partial implementation clue, not a complete UDFPS fix or device-test result."
 
 camera_porting_references:
   - title: "OnePlus 13T Camera Fix for OxygenOS"
@@ -46,6 +77,58 @@ camera_porting_references:
     target: "OnePlus 13T converted to OxygenOS CPH2723"
     finding: "Bind-mounts ColorOS-derived ODM camera config, camera libraries/plugins, and camera.oemlayer.so; not a LineageOS compatibility proof"
     status: "SOURCE_VERIFIED + NOT_TESTED_ON_LINEAGE"
+
+pending_references:
+  updated_on: "2026-08-24"
+  policy: "Catalogued for later review; no entry becomes a build input or device-supported claim without a pinned commit and separate validation record."
+  build_and_device_tree:
+    - title: "patches_for_pagani"
+      url: "https://github.com/ABNOTF/patches_for_pagani"
+      default_branch_observed: "main"
+      intended_use: "candidate pagani build patches"
+      status: "LINK_CHECKED + NOT_REVIEWED + NOT_TESTED"
+    - title: "android_device_oneplus_pagani"
+      url: "https://github.com/zzkeier/android_device_oneplus_pagani/tree/lineage-23.0"
+      branch: "lineage-23.0"
+      intended_use: "candidate device-tree comparison"
+      status: "LINK_CHECKED + NOT_REVIEWED + NOT_TESTED"
+    - title: "LineageOS official build guide for OnePlus 13 (dodge)"
+      url: "https://wiki.lineageos.org/devices/dodge/build/"
+      intended_use: "official build-workflow reference for a related device"
+      status: "LINK_CHECKED + NOT_APPLIED_TO_PAGANI"
+      note: "dodge is not pagani; device-specific commands and files must not be copied blindly"
+  hardware_and_fingerprint:
+    - title: "android_hardware_oplus"
+      url: "https://github.com/RandomLemon/android_hardware_oplus"
+      default_branch_observed: "lineage-23.2"
+      intended_use: "candidate OPlus hardware and UDFPS/FOD shim comparison"
+      status: "LINK_CHECKED + NOT_REVIEWED + NOT_TESTED"
+  root_and_hiding:
+    - title: "User-provided DerpFest root/integrity/hiding bundle"
+      url: "https://1817114020.share.123pan.cn/123pan/8MYVVv-QFmDh?pwd=INT8"
+      password: "INT8"
+      claimed_components:
+        - "KernelSU-Next"
+        - "SUSFS"
+        - "Zygisk / LSPosed"
+        - "NeoZygisk / Vector"
+        - "TEESimulator-RS"
+        - "TA-enhanced"
+        - "PlayIntegrityFix-inject-s"
+        - "keybox.xml"
+        - "HMA-OSS"
+      status: "COMMUNITY_CLAIM + LINK_RECORDED + NOT_DOWNLOADED + NOT_REVIEWED + NOT_TESTED"
+      redistributed: false
+  rom_archives:
+    - title: "OnePlus pagani files on SourceForge"
+      url: "https://sourceforge.net/projects/oneplus-pagani/files/"
+      intended_use: "foreign community ROM and file release index"
+      status: "LINK_RECORDED + NOT_REVIEWED + NOT_TESTED"
+  recovery:
+    - title: "twrp_device_oplus_sm87xx"
+      url: "https://github.com/kmiit/twrp_device_oplus_sm87xx"
+      branch: "twrp-16.0"
+      status: "ALREADY_REFERENCED; continue monitoring separately from device-tested recovery results"
 
 edl_arb_references:
   - title: "OPPO/OnePlus/Realme Qualcomm Files Share"
@@ -88,6 +171,26 @@ unpublished_artifact_fingerprints:
     dimensions: "1536x1165"
     sha256: "df1fbdea4655cbd4097bc0c56cea9dc85c262e87bb0561429e945420a2b5ea61"
     status: "COMMUNITY_CONTEXT_ONLY"
+
+committed_context_artifacts:
+  - description: "User-supplied CoolApk discussion about OplusFodShim, AOD, screen-off fingerprint, and adjacent camera behavior"
+    path: "assets/community-clues/2026-08-24-fingerprint-oplusfodshim.jpg"
+    actual_media_type: "JPEG"
+    dimensions: "707x1536"
+    sha256: "59c1375ffd55582ef0300f778164b22b856d544051980dbcf2ff817c3ea2965f"
+    status: "COMMUNITY_CONTEXT_ONLY + NOT_TESTED"
+  - description: "User-supplied CoolApk reply suggesting display_config as an HDR display investigation clue"
+    path: "assets/community-clues/2026-08-24-hdr-display-config.jpg"
+    actual_media_type: "JPEG"
+    dimensions: "1536x944"
+    sha256: "6e449f1b293afd962183ac956d96af90928d659c7c1dbbf6aabca1c42003c5aa"
+    status: "COMMUNITY_CONTEXT_ONLY + NOT_TESTED_ON_PAGANI"
+  - description: "User-supplied CoolApk reply describing notify_fppress writes as a fingerprint implementation clue"
+    path: "assets/community-clues/2026-08-24-fingerprint-notify-fppress.jpg"
+    actual_media_type: "JPEG"
+    dimensions: "1536x640"
+    sha256: "e2b7db6929a588e2001c1431e7587176d407df1483fe5d8921b4cff21560eb98"
+    status: "COMMUNITY_CONTEXT_ONLY + NOT_TESTED"
 
 verified_build_manifest:
   description: "Repositories pinned by the successfully built and device-tested LineageOS 23.2 manifest"
