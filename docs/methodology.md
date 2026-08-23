@@ -79,7 +79,7 @@ flowchart TD
 
 本仓库不把来源不明的转载、删去上下文的截图或无法定位原帖的网盘说明当成事实。CoolApk（酷安）来源默认排除；由仓库所有者明确提供的截图如需保留，只能作为低等级上下文线索，并必须在 `data/source-index.yaml` 中逐条列出账号、URL、主题范围、文件哈希和验证状态。例外只允许保留线索及归属，不会因为被收录就提高证据等级。
 
-截至 2026-08-24 有五组限定例外：用户“皓皓的小月”的 OnePlus 13T ARB1/EDL 引导、用户提供截图中的相机移植讨论，以及三张分别涉及 OplusFodShim、`display_config` 和 `notify_fppress` 的讨论截图。这三张新增截图只适用于 [`pending-references.md`](pending-references.md) 所列的指纹与 HDR 线索；全部例外均不扩展到相关账号的其他帖子、截图或转述。
+截至 2026-08-24，限定例外包括：用户“皓皓的小月”的 OnePlus 13T ARB1/EDL 引导、用户提供截图中的相机移植讨论、三张分别涉及 OplusFodShim、`display_config` 和 `notify_fppress` 的讨论截图，以及 [`coolapk-rom-index.md`](coolapk-rom-index.md) 中逐条列明 URL 的 OnePlus 13T ROM 发布/构建线索。ROM 检索结果按家族排重，只保留与具体发行、更新、构建或外部目录直接相关的帖子；求包、泛讨论和同账号其他内容仍排除。完整账号、URL 与主题范围以 `data/source-index.yaml` 为准。
 
 ## 二进制与隐私
 

@@ -55,7 +55,7 @@ LineageOS Wiki 当前没有检索到 `pagani` 的官方设备构建页。因此�
 
 ## Root、完整性与隐藏相关线索
 
-以下内容来自用户提供的 DerpFest 社区文本，统一标记为 `COMMUNITY_CLAIM + NOT_REVIEWED + NOT_TESTED`：
+以下内容来自用户提供的 DerpFest 社区文本，现已定位到 [INT16 的“类原生 环境隐藏”原帖](https://www.coolapk.com/feed/73075885)，统一标记为 `COMMUNITY_CLAIM + NOT_REVIEWED + NOT_TESTED`：
 
 - 该文本称其 OnePlus 13T DerpFest 构建已内置 KernelSU-Next 与 SUSFS，并建议通过对应 KSU 模块隐藏部分 AOSP/Lineage 特征。
 - 基础组合提及 Zygisk 与 LSPosed；出于实现透明性考虑，另提到 NeoZygisk 与 Vector。
@@ -72,7 +72,8 @@ LineageOS Wiki 当前没有检索到 `pagani` 的官方设备构建页。因此�
 | 参考 | 计划用途 | 当前状态 | 边界 |
 |---|---|---|---|
 | [kmiit/twrp_device_oplus_sm87xx](https://github.com/kmiit/twrp_device_oplus_sm87xx) | TWRP 设备树和 SM8750 recovery 实现参考 | `ALREADY_REFERENCED` | 已用于 [TWRP 研究文档](twrp.md)；新提交不增加实机结论 |
-| [OnePlus pagani files on SourceForge](https://sourceforge.net/projects/oneplus-pagani/files/) | 国外 OnePlus 13T 类原生 ROM/文件发布入口 | `LINK_RECORDED + NOT_REVIEWED + NOT_TESTED` | 这是文件目录，不是兼容性或安全背书；下载前逐项确认维护者、版本、校验值和安装说明 |
+| [酷安 OnePlus 13T 类原生 ROM 线索与排重](coolapk-rom-index.md) | 汇总 PixelOS、DerpFest、LineageOS 及只有目录线索的候选包 | `COMMUNITY_CLAIM + DEDUPED + NOT_TESTED` | 按 ROM 家族排重；帖子更新和启动进度不另算一个 ROM |
+| [OnePlus pagani files on SourceForge](https://sourceforge.net/projects/oneplus-pagani/files/) | 国外 OnePlus 13T 类原生 ROM/文件发布入口 | `LINK_RECORDED + DIRECTORY_CHECKED + NOT_REVIEWED + NOT_TESTED` | 已确认目录含六个 ROM 家族；目录存在仍不代表兼容性、安全性或 LineageOS 源码继承关系 |
 
 ## 后续采用顺序
 
