@@ -1,0 +1,89 @@
+schema_version: 1
+last_checked: "2026-08-23"
+device:
+  marketing_name: "OnePlus 13T"
+  model: "PKX110"
+  codename: "pagani"
+  platform: "SM8750"
+
+source_policy:
+  accepted:
+    - "official documentation and source repositories"
+    - "public Git repositories pinned to a branch or commit"
+    - "locally reproduced device observations with a date and environment"
+  excluded:
+    - "CoolApk posts, screenshots, reposts, and conclusions derived only from CoolApk"
+  raw_artifacts_committed: false
+
+verified_build_manifest:
+  description: "Repositories pinned by the successfully built and device-tested LineageOS 23.2 manifest"
+  built_on: "2026-08-14"
+  device_tested_on: "2026-08-16"
+  repositories:
+    - name: "device_oneplus_pagani"
+      url: "https://github.com/OnePlus-13T-Development/android_device_oneplus_pagani"
+      commit: "dfe9aa41e8154fc89dc217efae564bac6c376216"
+    - name: "device_oneplus_sm8750-common"
+      url: "https://github.com/LineageOS/android_device_oneplus_sm8750-common"
+      commit: "44ad18fa12b51983a36fb7ec67c54a6b4c032859"
+    - name: "hardware_oplus"
+      url: "https://github.com/LineageOS/android_hardware_oplus"
+      commit: "ec3b8211676f55ed09905c4c336356acedc040d3"
+    - name: "kernel_oneplus_sm8750"
+      url: "https://github.com/LineageOS/android_kernel_oneplus_sm8750"
+      commit: "999b95d4792dd41fba72a7914abe897cc3ee2ecd"
+    - name: "kernel_oneplus_sm8750-devicetrees"
+      url: "https://github.com/LineageOS/android_kernel_oneplus_sm8750-devicetrees"
+      commit: "ebb25e3526ad84cc5a1090a5a9242f33ff087bf2"
+    - name: "kernel_oneplus_sm8750-modules"
+      url: "https://github.com/LineageOS/android_kernel_oneplus_sm8750-modules"
+      commit: "eab0a34a8b657ee22839c9b3878c3b6e687675f9"
+
+historical_reference_snapshot:
+  frozen_on: "2026-08-16"
+  branch: "16.0"
+  warning: "A historical comparison baseline; do not substitute current default-branch HEADs for these commits"
+  repositories:
+    - name: "android_device_oneplus_pagani"
+      url: "https://github.com/Oneplus-13T-AOSP/android_device_oneplus_pagani"
+      commit: "438f9c9e"
+    - name: "proprietary_vendor_oneplus_pagani"
+      url: "https://github.com/Oneplus-13T-AOSP/proprietary_vendor_oneplus_pagani"
+      commit: "b82c534b"
+    - name: "android_device_oneplus_sm8750-common"
+      url: "https://github.com/Oneplus-13T-AOSP/android_device_oneplus_sm8750-common"
+      commit: "faca90d7"
+    - name: "android_hardware_oplus"
+      url: "https://github.com/Oneplus-13T-AOSP/android_hardware_oplus"
+      commit: "7cd64aa6"
+    - name: "android_vendor_extraPatches"
+      url: "https://github.com/Oneplus-13T-AOSP/android_vendor_extraPatches"
+      commit: "5733d306"
+    - name: "local_manifests"
+      url: "https://github.com/Oneplus-13T-AOSP/local_manifests"
+      commit: "7f47256f"
+
+recovery_source:
+  - name: "twrp_device_oplus_sm87xx"
+    url: "https://github.com/kmiit/twrp_device_oplus_sm87xx"
+    branch: "twrp-16.0"
+    checked_head: "74d075623b35f685fcde82efb5a43548697d1a6e"
+    status: "source reference; runtime results are recorded separately"
+
+official_documentation:
+  - title: "Privileged permission allowlist"
+    url: "https://source.android.com/docs/core/permissions/perms-allowlist"
+  - title: "NikGapps project"
+    url: "https://github.com/nikgapps/project"
+  - title: "NikGapps uninstall behavior"
+    url: "https://nikgapps.com/misc/2023/03/04/Uninstall-NikGapps.html"
+  - title: "NikGapps config"
+    url: "https://nikgapps.com/misc/2022/02/22/NikGapps-Config.html"
+
+upstream_related_not_device_proven:
+  - url: "https://github.com/OnePlusOSS/android_kernel_common_oneplus_sm8750"
+    note: "SM8750 upstream-related; pagani applicability not established"
+  - url: "https://github.com/OnePlusOSS/android_kernel_oneplus_sm8750"
+    note: "SM8750 upstream-related; pagani applicability not established"
+  - url: "https://github.com/OnePlusOSS/android_kernel_modules_and_devicetree_oneplus_sm8750"
+    note: "SM8750 upstream-related; pagani applicability not established"

@@ -1,0 +1,16 @@
+*.img
+*.bin
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.log
+*.keybox
+payload.bin
+super_empty.img
+
+# Local evidence and build output
+evidence/
+logs/
+out/
+dist/

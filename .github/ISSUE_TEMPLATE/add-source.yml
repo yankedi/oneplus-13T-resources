@@ -1,0 +1,56 @@
+name: 补充公开来源
+description: 提交一个可复核的 OnePlus 13T 公开资料来源
+title: "[来源] "
+labels: ["source"]
+body:
+  - type: markdown
+    attributes:
+      value: 请提交原始公开来源，不要提交酷安内容、转述或含敏感信息的附件。
+  - type: input
+    id: url
+    attributes:
+      label: 原始 URL
+      placeholder: https://...
+    validations:
+      required: true
+  - type: dropdown
+    id: source_type
+    attributes:
+      label: 来源类型
+      options:
+        - 官方文档
+        - 官方源码
+        - 公开 Git 仓库
+        - 公开发布说明
+        - 其他可复核来源
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: 版本、分支或提交
+      description: 能固定版本时请不要只写 HEAD。
+  - type: textarea
+    id: claim
+    attributes:
+      label: 该来源支持什么结论
+    validations:
+      required: true
+  - type: textarea
+    id: limits
+    attributes:
+      label: 适用范围与限制
+      description: 说明型号、固件代际，以及哪些结论仍需设备实测。
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 此内容及其结论不来自酷安。
+          required: true
+        - label: 未包含账号令牌、设备唯一标识、keybox 或私人路径。
+          required: true
+        - label: 我已区分来源事实、个人推断和待验证项。
+          required: true

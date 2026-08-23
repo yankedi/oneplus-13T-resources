@@ -1,0 +1,64 @@
+name: 提交设备测试
+description: 记录可复现的 OnePlus 13T 设备验证结果
+title: "[设备测试] "
+labels: ["device-test"]
+body:
+  - type: input
+    id: build
+    attributes:
+      label: 系统或固件版本
+      placeholder: 例如 LineageOS 23.2 / PKX110_16.0.3.501
+    validations:
+      required: true
+  - type: input
+    id: slot
+    attributes:
+      label: 活动槽位与恢复环境
+      placeholder: 例如 slot B，Lineage Recovery
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+    validations:
+      required: true
+  - type: dropdown
+    id: result
+    attributes:
+      label: 结果
+      options:
+        - PASS
+        - FAIL
+        - PARTIAL
+        - NEEDS_RETEST
+    validations:
+      required: true
+  - type: textarea
+    id: writes
+    attributes:
+      label: 写入审计
+      description: 写明所有被刷写、格式化或修改的分区/文件；若没有，写“无”。
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 最小脱敏证据
+      description: 可粘贴必要日志片段、哈希或公开链接；不要上传整份原始日志。
+    validations:
+      required: true
+  - type: textarea
+    id: not_tested
+    attributes:
+      label: 未覆盖项目
+      description: 明确本次结果不能证明什么。
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 隐私与来源检查
+      options:
+        - label: 已移除序列号、账号、令牌、私人路径和其他设备唯一标识。
+          required: true
+        - label: 结果来自本人设备复现，不是酷安转述。
+          required: true
