@@ -92,6 +92,8 @@
 | Display | PASS | 亮度与唤醒正常，UDFPS overlay 可显示 |
 | Fingerprint enrollment | FAIL | `waitUiready` 超时，vendor error `15001` |
 
+这里的 Camera `PASS` 只表示当前 AOSP/Lineage Camera provider、设备枚举和基础拍摄链工作，不表示 OPlus/ColorOS 原厂相机已经完成移植。关于 ColorOS ODM 文件和 OPlus framework 依赖的新增线索见 [OPlus / ColorOS 相机移植线索](camera-porting-clue.md)。
+
 ## UDFPS 根因边界
 
 已经确认：sensor、TA、vendor HAL、VINTF、framework provider 和 overlay 显示链存在；失败发生在 OPlus HAL 的 `waitUiready` 门。Settings enrollment 场景没有在约 502 ms 窗口内向 HAL 送达 `session.onUiReady()`。
@@ -119,4 +121,3 @@
 - aggressive power hints、LTPO magic write 或整批 framework patch。
 
 详细差异见 [AOSP 源码差异审计摘要](aosp-gap-audit.md)。
-

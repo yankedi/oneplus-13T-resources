@@ -5,7 +5,7 @@ labels: ["source"]
 body:
   - type: markdown
     attributes:
-      value: 请提交原始公开来源，不要提交酷安内容、转述或含敏感信息的附件。
+      value: 请提交原始公开来源，不要提交转述或含敏感信息的附件。酷安来源仅接受 source-index 中已经列出的精确例外。
   - type: input
     id: url
     attributes:
@@ -48,7 +48,7 @@ body:
     attributes:
       label: 提交前检查
       options:
-        - label: 此内容及其结论不来自酷安。
+        - label: 此内容不来自酷安，或其账号和主题已在 `data/source-index.yaml` 中列为精确例外。
           required: true
         - label: 未包含账号令牌、设备唯一标识、keybox 或私人路径。
           required: true

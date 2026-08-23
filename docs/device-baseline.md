@@ -69,6 +69,12 @@
 
 源码差异、信号格或 UDFPS UI 问题均不能作为盲目更换 ABL/XBL/TZ/HYP/AOP/modem/DSP 的理由。
 
+## `.501` 的 ARB 边界
+
+公开的 OnePlus ARB 跟踪数据在 2026-08-23 将 `PKX110_16.0.3.501(CN01)` 标为 rollback index `1`，而 `PKX110_16.0.2.400(CN01)` 标为 `0`。这能作为版本边界的公开交叉证据，但本仓库尚未从本机 `.501` 固件独立提取并复算 ARB 元数据，因此状态是 `SOURCE_VERIFIED`，不是 `HOST_VERIFIED`。
+
+ARB 约束的是设备是否接受更低 rollback index 的启动组件，并不等同于“9008 接口消失”或“任何 Firehose 都不可加载”。相关概念、社区时间线及待验证引导见 [EDL、Firehose 与 ARB1](edl-arb.md)。
+
 ## 最后已知槽位布局
 
 | 槽位 | 系统 | Recovery | 健康状态（2026-08-16） |
@@ -77,4 +83,3 @@
 | B | LineageOS 23.2 unofficial | Lineage Recovery | successful=yes，unbootable=no |
 
 槽位状态会随 OTA、恢复、刷写和 bootloader 行为变化；任何后续操作前必须重新读取，不能永久依赖这张表。
-

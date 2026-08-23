@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 last_checked: "2026-08-23"
 device:
   marketing_name: "OnePlus 13T"
@@ -11,9 +11,83 @@ source_policy:
     - "official documentation and source repositories"
     - "public Git repositories pinned to a branch or commit"
     - "locally reproduced device observations with a date and environment"
+    - "explicitly scoped community-source exceptions recorded below, always kept at claim or not-tested status until independently verified"
   excluded:
-    - "CoolApk posts, screenshots, reposts, and conclusions derived only from CoolApk"
+    - "CoolApk posts, screenshots, reposts, and conclusions derived only from CoolApk, except the exact account and topic scope listed under community_source_exceptions"
   raw_artifacts_committed: false
+
+community_source_exceptions:
+  - platform: "CoolApk"
+    account_name: "皓皓的小月"
+    profile_url: "https://www.coolapk.com/u/39276643"
+    account_id: "39276643"
+    scope: "OnePlus 13T ARB1 authorization-free EDL/Firehose guide and the supplied three-file loader set only"
+    exact_post_url: null
+    attribution_basis: "provided by the repository owner; profile page could not be independently fetched during this audit"
+    status: "COMMUNITY_CLAIM + NOT_TESTED"
+    binary_redistribution: false
+    note: "This exception does not include other posts, screenshots, reposts, or claims from this account or platform."
+  - platform: "CoolApk"
+    account_name: "爱干饭的圣徒 / 好好335"
+    profile_url: null
+    account_id: null
+    scope: "The supplied screenshot discussion about OnePlus 13T ODM files and OPlus framework dependencies for stock-camera porting only"
+    exact_post_url: null
+    attribution_basis: "user-supplied screenshot captured on 2026-08-23; the visible reply date is July 22, year and post URL are not shown"
+    status: "COMMUNITY_CLUE + NOT_TESTED_ON_LINEAGE"
+    binary_redistribution: false
+    note: "The linked GitHub repository is the primary technical source; the screenshot is contextual evidence only."
+
+camera_porting_references:
+  - title: "OnePlus 13T Camera Fix for OxygenOS"
+    url: "https://github.com/kinginu/oneplus13t-fix-camera"
+    checked_commit: "698cdca07efc12f9d5c8d3ad134e011289bcabd0"
+    checked_on: "2026-08-23"
+    target: "OnePlus 13T converted to OxygenOS CPH2723"
+    finding: "Bind-mounts ColorOS-derived ODM camera config, camera libraries/plugins, and camera.oemlayer.so; not a LineageOS compatibility proof"
+    status: "SOURCE_VERIFIED + NOT_TESTED_ON_LINEAGE"
+
+edl_arb_references:
+  - title: "OPPO/OnePlus/Realme Qualcomm Files Share"
+    url: "https://xdaforums.com/t/oppo-oneplus-realme-qualcomm-files-share.4769736/"
+    first_posted: "2025-11-27"
+    status: "community timeline source"
+  - title: "OnePlus Anti-Rollback Checker"
+    url: "https://github.com/Bartixxx32/Oneplus-antirollchecker"
+    checked_commit: "6088e36feb702925e21978aae2c3e030d148cfca"
+    checked_on: "2026-08-23"
+    finding: "PKX110_16.0.3.501(CN01)=ARB 1; PKX110_16.0.2.400(CN01)=ARB 0"
+  - title: "OPLUS EDL Tool v2"
+    url: "https://github.com/salokrwhite/OplusEdlTool"
+    checked_commit: "72999902af09e99c702866e0086482dc42b82bbb"
+    checked_on: "2026-08-23"
+    status: "tool workflow reference; does not verify the supplied loader"
+  - title: "Android Verified Boot rollback protection"
+    url: "https://source.android.com/docs/security/features/verifiedboot/verified-boot#rollback-protection"
+    checked_on: "2026-08-23"
+
+unpublished_artifact_fingerprints:
+  - description: "User-supplied ARB1 authorization-free 9008 guide archive; statically inspected, not committed"
+    archive_name: "arb1免授权9008引导.zip"
+    archive_size: 732455
+    archive_sha256: "84b3354e31aefed4caa8832f09dbca726fb015e4ae50ddfd5e40694565799d0a"
+    status: "HOST_VERIFIED_STRUCTURE + NOT_TESTED_ON_DEVICE"
+    files:
+      - name: "devprg.elf"
+        size: 1682200
+        sha256: "e7e9d768175aeacb5f33f1e019121730f19faccf91ea7fd249d8c4826dfec77e"
+      - name: "digest.elf"
+        size: 33244
+        sha256: "c4d39f9e60d5681a5b39300844e44b2f25a394566ade95e62ab413cdc8151bfe"
+      - name: "sig.bin"
+        size: 4096
+        sha256: "e0ca7caa23ae93302b5fc0fef06a5ecd31a619f192637573ab1b2dbed840f127"
+  - description: "User-supplied CoolApk camera-porting discussion screenshot; text extracted into docs, image not committed"
+    file_name: "Screenshot_20260823-182806_酷安.png"
+    actual_media_type: "JPEG"
+    dimensions: "1536x1165"
+    sha256: "df1fbdea4655cbd4097bc0c56cea9dc85c262e87bb0561429e945420a2b5ea61"
+    status: "COMMUNITY_CONTEXT_ONLY"
 
 verified_build_manifest:
   description: "Repositories pinned by the successfully built and device-tested LineageOS 23.2 manifest"

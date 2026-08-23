@@ -33,6 +33,7 @@
 - Boot chain 损坏时，先处理目标槽的 boot/init_boot/vendor_boot/dtbo/vbmeta 链。
 - ROM 无法启动但 `/data` 可能仍完好时，不要先恢复 userdata。
 - Dynamic partition 损坏时优先使用受控的官方 OTA/兼容安装路径；raw super 不是第一选择。
+- 当前 `.501` 基线被公开固件分析标为 ARB 1；不得向其刷写来自 ARB 0 固件代际的 ABL/XBL、boot chain、TZ/HYP/AOP 或其他受 rollback index 约束的启动组件。
 - `persist`、`modemst1/2`、`fsg`、`fsc`、`frp`、keystore、uefivarstore 等备份存在，但正常 ROM 回滚不得恢复。
 - Raw userdata 与 metadata 是同一代快照对，不能拆开“试试看”。
 
@@ -51,3 +52,4 @@
 
 任何真实恢复都必须根据当时槽位、firmware、metadata-encryption、bootloader 和安全状态重新设计。本页是资产与风险索引，不是可直接复制执行的命令清单。
 
+EDL/Firehose 只能增加一种访问分区的路径，不能绕过 ARB 的启动检查，也不能使低版本启动链变得安全。待验证的 ARB1 引导只允许先做只读枚举，详见 [`edl-arb.md`](edl-arb.md)。
