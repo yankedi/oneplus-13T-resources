@@ -9,7 +9,7 @@
 
 ## 当前已知状态
 
-最后核验：**2026-08-23**。
+最后核验：**2026-08-24**。
 
 | 项目 | 已确认结论 | 证据等级 |
 |---|---|---|
@@ -36,6 +36,7 @@
 - [EDL、Firehose 与 ARB1 待验证引导](docs/edl-arb.md)
 - [OPlus / ColorOS 相机移植线索](docs/camera-porting-clue.md)
 - [待使用／未验证参考](docs/pending-references.md)
+- [OnePlus 13T 设备树比较](docs/device-tree-comparison.md)
 - [AOSP 源码差异审计摘要](docs/aosp-gap-audit.md)
 - [来源索引（机器可读）](data/source-index.yaml)
 - [功能差异矩阵（TSV）](data/feature-matrix.tsv)
@@ -80,4 +81,4 @@
 3. 重新构建包含正确 Google Clock priv-app allowlist 的 GApps 方案，并以干净安装流程验证；临时 `log` 模式不能当永久修复。
 4. 为蓝牙配对、GNSS 实际定位、相机实拍和长时间通话补充可复现的实机记录。
 5. 对照 `oneplus13t-fix-camera` 的 ODM 文件清单与当前 Lineage vendor tree，区分“缺少设备配置/blob”和“缺少 OPlus framework”两类相机移植依赖。
-6. 按[待使用／未验证参考](docs/pending-references.md)中的顺序固定候选 commit，再分别审计构建补丁、UDFPS、显示配置与 2.4 GHz Wi-Fi 差异。
+6. 按[待使用／未验证参考](docs/pending-references.md)和[设备树比较](docs/device-tree-comparison.md)固定的 commit，再分别审计构建补丁、UDFPS、显示配置与 2.4 GHz Wi-Fi 差异。

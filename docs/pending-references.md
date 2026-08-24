@@ -20,13 +20,18 @@
 
 | 参考 | 计划用途 | 当前状态 | 边界 |
 |---|---|---|---|
-| [ABNOTF/patches_for_pagani](https://github.com/ABNOTF/patches_for_pagani) | 收集 pagani 构建补丁，和现有 device tree / common tree 做逐项对照 | `LINK_CHECKED + NOT_REVIEWED + NOT_TESTED` | 不整包套用；先确认目标 Android/Lineage 分支和补丁前置条件 |
-| [zzkeier/android_device_oneplus_pagani（lineage-23.0）](https://github.com/zzkeier/android_device_oneplus_pagani/tree/lineage-23.0) | 设备树实现参考 | `LINK_CHECKED + NOT_REVIEWED + NOT_TESTED` | 与本仓库已冻结的成功构建来源不是同一基线 |
+| [`ABNOTF/patches_for_pagani@1818541`](https://github.com/ABNOTF/patches_for_pagani/tree/1818541189e505057f84a34ad4ba86f86e571fb5) | 构建指南、UDFPS SystemUI 补丁和 Aperture 相机补丁参考 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | 仓库不是设备树；指南指定的两棵实际源码输入已拆分登记在下两行 |
+| [`ABNOTF/android_device_oneplus_pagani@560f47e`](https://github.com/ABNOTF/android_device_oneplus_pagani/tree/560f47ecd11bb520db4319bde01c0fa03c36fa50) | `patches_for_pagani` 指定的 `device/oneplus/pagani` 构建输入 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | `lineage-23.2`；是 Development 冻结基线 `dfe9aa4` 的后代，指南引用不等于本仓库构建验证 |
+| [`ABNOTF/android_device_oneplus_sm8750-common@5018caf`](https://github.com/ABNOTF/android_device_oneplus_sm8750-common/tree/5018cafefeb84ddc7ad1beda21f6d70ed6f28163) | `patches_for_pagani` 指定的 `device/oneplus/sm8750-common` 构建输入 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | `lineage-23.2`；与 LineageOS common 冻结基线已分叉，指南引用不等于本仓库构建验证 |
+| [`zzkeier/android_device_oneplus_pagani@f935f38`](https://github.com/zzkeier/android_device_oneplus_pagani/tree/f935f38673bc581a09944ec342984816c7db78ca) | `lineage-23.0` 机型设备树实现参考 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | 与本仓库 `lineage-23.2` 成功构建基线不是同一分支 |
+| [`zzkeier/android_device_oneplus_sm8750-common@4247c19`](https://github.com/zzkeier/android_device_oneplus_sm8750-common/tree/4247c19bb791f9ff293e0e169380c83a46c10bd2) | common 设备树和 2.4 GHz Wi-Fi 候选差异的分支级参考 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | `lineage-23.2`；包含下一行的 `9280681`，但整棵树还有其他独有提交 |
 | [`sm8750-common@9280681`：pagani 2.4 GHz Wi-Fi 修复](https://github.com/zzkeier/android_device_oneplus_sm8750-common/commit/92806812c82f10d42ea663c1b6348c2a97294d7b) | 精确比对 Wi-Fi 固件搜索路径与新增的 ODM 配置文件条目 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | fork 中的候选 commit；尚未进入本仓库冻结的 LineageOS common tree |
 | [RandomLemon/android_hardware_oplus](https://github.com/RandomLemon/android_hardware_oplus) | OPlus hardware、UDFPS/FOD shim 候选实现参考 | `LINK_CHECKED + NOT_REVIEWED + NOT_TESTED` | 截图与仓库的关联由资料提供者给出；尚未定位决定性 commit 或文件 |
 | [LineageOS 官方 OnePlus 13（dodge）构建指南](https://wiki.lineageos.org/devices/dodge/build/) | 参考 LineageOS 官方构建环境、同步、专有文件提取和编译流程 | `LINK_CHECKED + NOT_APPLIED_TO_PAGANI` | `dodge` 是 OnePlus 13，不是 OnePlus 13T 的 `pagani`；不能照搬设备命令、分区或专有文件 |
 
 LineageOS Wiki 当前没有检索到 `pagani` 的官方设备构建页。因此，`dodge` 页面只能作为同代设备的流程示例，实际 manifest、lunch target、proprietary files 和分区配置仍以 pagani 源码为准。
+
+上述 Development、zzkeier、ABNOTF 三套机型层／公共层的冻结 HEAD、依赖拓扑、文件数量、Git 分叉、显示、UDFPS、音频、power、proprietary 和 Wi-Fi 差异见 [OnePlus 13T 设备树比较](device-tree-comparison.md)。其中“ABNOTF 实际构建树”只表示构建指南的 clone 命令直接指定了这两个仓库，不表示本仓库已经用它们成功构建或完成设备测试。
 
 ## 2.4 GHz Wi-Fi / common tree 候选修复
 
