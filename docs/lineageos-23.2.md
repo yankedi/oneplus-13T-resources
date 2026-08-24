@@ -1,6 +1,6 @@
 # LineageOS 23.2：构建、安装与硬件状态
 
-更新时间：2026-08-23
+更新时间：2026-08-24
 
 ## 构建产物
 
@@ -93,6 +93,12 @@
 | Fingerprint enrollment | FAIL | `waitUiready` 超时，vendor error `15001` |
 
 这里的 Camera `PASS` 只表示当前 AOSP/Lineage Camera provider、设备枚举和基础拍摄链工作，不表示 OPlus/ColorOS 原厂相机已经完成移植。关于 ColorOS ODM 文件和 OPlus framework 依赖的新增线索见 [OPlus / ColorOS 相机移植线索](camera-porting-clue.md)。
+
+### 2.4 GHz Wi-Fi 的验证边界
+
+上表中的 Wi-Fi `PASS` 没有单独记录频段，因此不能外推为 2.4 GHz 已完成专项验证。[`zzkeier/android_device_oneplus_sm8750-common@9280681`](https://github.com/zzkeier/android_device_oneplus_sm8750-common/commit/92806812c82f10d42ea663c1b6348c2a97294d7b) 是一项待参考的 pagani 2.4 GHz 候选修复：它扩展 ueventd firmware 搜索路径，并把两个额外的 ODM Wi-Fi 配置文件加入 proprietary 列表。
+
+该差异不在本次成功构建冻结的 `LineageOS/android_device_oneplus_sm8750-common@44ad18f` 中，尚未合入、构建或实机测试。具体文件变化和采用前检查项见[待使用／未验证参考](pending-references.md#24-ghz-wi-fi--common-tree-候选修复)。
 
 ## UDFPS 根因边界
 

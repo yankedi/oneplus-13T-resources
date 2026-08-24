@@ -35,7 +35,6 @@
 - [备份与恢复边界](docs/backup-and-recovery.md)
 - [EDL、Firehose 与 ARB1 待验证引导](docs/edl-arb.md)
 - [OPlus / ColorOS 相机移植线索](docs/camera-porting-clue.md)
-- [酷安 OnePlus 13T 类原生 ROM 线索与排重](docs/coolapk-rom-index.md)
 - [待使用／未验证参考](docs/pending-references.md)
 - [AOSP 源码差异审计摘要](docs/aosp-gap-audit.md)
 - [来源索引（机器可读）](data/source-index.yaml)
@@ -71,7 +70,7 @@
 - 用户明确提供并要求归档的社区截图，只能作为有主题边界的上下文证据存入 `assets/community-clues/`；必须登记哈希和验证状态，不能单独证明功能可用。
 - 大型二进制不进入 Git 历史；必要时只记录可信来源、文件名、版本和校验值。
 - 不公开本机绝对路径、ADB 序列号、账户信息、SIM/Wi-Fi 信息或认证材料。
-- CoolApk（酷安）内容默认排除；目前只为 `data/source-index.yaml` 中逐条列出的 ARB1/EDL、相机、指纹、显示 HDR 和 OnePlus 13T ROM 发布/构建线索设立有范围、可撤销的例外。例外不扩展到相关账号的其他内容，也不会把社区声明提升为实机事实。
+- CoolApk（酷安）内容默认排除；目前只为 `data/source-index.yaml` 中逐条列出的 ARB1/EDL、相机、指纹和显示 HDR 线索设立有范围、可撤销的例外。例外不扩展到相关账号的其他内容，也不会把社区声明提升为实机事实。
 - 第三方仓库和文件各自遵循其原许可证；本仓库的链接不代表重新授权或背书。
 
 ## 目前最重要的待办
@@ -81,4 +80,4 @@
 3. 重新构建包含正确 Google Clock priv-app allowlist 的 GApps 方案，并以干净安装流程验证；临时 `log` 模式不能当永久修复。
 4. 为蓝牙配对、GNSS 实际定位、相机实拍和长时间通话补充可复现的实机记录。
 5. 对照 `oneplus13t-fix-camera` 的 ODM 文件清单与当前 Lineage vendor tree，区分“缺少设备配置/blob”和“缺少 OPlus framework”两类相机移植依赖。
-6. 按[待使用／未验证参考](docs/pending-references.md)中的顺序固定候选 commit，再分别审计构建补丁、UDFPS 与显示配置。
+6. 按[待使用／未验证参考](docs/pending-references.md)中的顺序固定候选 commit，再分别审计构建补丁、UDFPS、显示配置与 2.4 GHz Wi-Fi 差异。

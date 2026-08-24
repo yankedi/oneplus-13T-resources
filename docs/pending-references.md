@@ -22,10 +22,22 @@
 |---|---|---|---|
 | [ABNOTF/patches_for_pagani](https://github.com/ABNOTF/patches_for_pagani) | 收集 pagani 构建补丁，和现有 device tree / common tree 做逐项对照 | `LINK_CHECKED + NOT_REVIEWED + NOT_TESTED` | 不整包套用；先确认目标 Android/Lineage 分支和补丁前置条件 |
 | [zzkeier/android_device_oneplus_pagani（lineage-23.0）](https://github.com/zzkeier/android_device_oneplus_pagani/tree/lineage-23.0) | 设备树实现参考 | `LINK_CHECKED + NOT_REVIEWED + NOT_TESTED` | 与本仓库已冻结的成功构建来源不是同一基线 |
+| [`sm8750-common@9280681`：pagani 2.4 GHz Wi-Fi 修复](https://github.com/zzkeier/android_device_oneplus_sm8750-common/commit/92806812c82f10d42ea663c1b6348c2a97294d7b) | 精确比对 Wi-Fi 固件搜索路径与新增的 ODM 配置文件条目 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | fork 中的候选 commit；尚未进入本仓库冻结的 LineageOS common tree |
 | [RandomLemon/android_hardware_oplus](https://github.com/RandomLemon/android_hardware_oplus) | OPlus hardware、UDFPS/FOD shim 候选实现参考 | `LINK_CHECKED + NOT_REVIEWED + NOT_TESTED` | 截图与仓库的关联由资料提供者给出；尚未定位决定性 commit 或文件 |
 | [LineageOS 官方 OnePlus 13（dodge）构建指南](https://wiki.lineageos.org/devices/dodge/build/) | 参考 LineageOS 官方构建环境、同步、专有文件提取和编译流程 | `LINK_CHECKED + NOT_APPLIED_TO_PAGANI` | `dodge` 是 OnePlus 13，不是 OnePlus 13T 的 `pagani`；不能照搬设备命令、分区或专有文件 |
 
 LineageOS Wiki 当前没有检索到 `pagani` 的官方设备构建页。因此，`dodge` 页面只能作为同代设备的流程示例，实际 manifest、lunch target、proprietary files 和分区配置仍以 pagani 源码为准。
+
+## 2.4 GHz Wi-Fi / common tree 候选修复
+
+候选来源是 [`zzkeier/android_device_oneplus_sm8750-common@9280681`](https://github.com/zzkeier/android_device_oneplus_sm8750-common/commit/92806812c82f10d42ea663c1b6348c2a97294d7b)，commit 标题为 `Fixing Pagani device performance on 2.4 GHz Wi-Fi`。本次直接读取到两处改动：
+
+1. `init/ueventd.qcom.rc` 将 firmware 搜索路径从仅 `/vendor/firmware_mnt/image/` 扩展为 `/mnt/vendor/persist/copy/`、`/odm/etc/wifi/`、`/mnt/vendor/persist/` 和原 vendor 路径。
+2. `proprietary-files.txt` 增加 `odm/vendor/etc/wifi/WCNSS_qcom_cfg_roam.ini` 与 `odm/vendor/etc/wifi/WCNSS_qcom_cfg_cmcc.ini`。
+
+本仓库成功构建时冻结的 [`LineageOS/android_device_oneplus_sm8750-common@44ad18f`](https://github.com/LineageOS/android_device_oneplus_sm8750-common/commit/44ad18fa12b51983a36fb7ec67c54a6b4c032859) 仍只有原 vendor firmware 路径和基础 `WCNSS_qcom_cfg.ini`；截至 2026-08-24，LineageOS 的 `lineage-23.2` HEAD 仍是该 commit，没有上述两项变化。候选 fork 的 `lineage-23.2` HEAD 为 `4247c19bb791f9ff293e0e169380c83a46c10bd2`，包含该修复。
+
+现有冒烟测试中的 Wi-Fi `PASS` 只记录了约 500 Mbps 的 L2 吞吐，没有单独记录频段、信道、配置文件加载路径或 2.4 GHz 复测，因此既不能证明当前构建存在该问题，也不能证明候选 commit 已修复本机。采用前应先确认 stock/ODM 中两个新增文件真实存在，再做最小 diff 构建，并分别记录 2.4 GHz 与 5 GHz 的关联、吞吐、热点和重连结果。
 
 ## 指纹 / UDFPS 线索
 
@@ -55,7 +67,7 @@ LineageOS Wiki 当前没有检索到 `pagani` 的官方设备构建页。因此�
 
 ## Root、完整性与隐藏相关线索
 
-以下内容来自用户提供的 DerpFest 社区文本，现已定位到 [INT16 的“类原生 环境隐藏”原帖](https://www.coolapk.com/feed/73075885)，统一标记为 `COMMUNITY_CLAIM + NOT_REVIEWED + NOT_TESTED`：
+以下内容来自用户提供的 DerpFest 社区文本，统一标记为 `COMMUNITY_CLAIM + NOT_REVIEWED + NOT_TESTED`：
 
 - 该文本称其 OnePlus 13T DerpFest 构建已内置 KernelSU-Next 与 SUSFS，并建议通过对应 KSU 模块隐藏部分 AOSP/Lineage 特征。
 - 基础组合提及 Zygisk 与 LSPosed；出于实现透明性考虑，另提到 NeoZygisk 与 Vector。
@@ -72,13 +84,12 @@ LineageOS Wiki 当前没有检索到 `pagani` 的官方设备构建页。因此�
 | 参考 | 计划用途 | 当前状态 | 边界 |
 |---|---|---|---|
 | [kmiit/twrp_device_oplus_sm87xx](https://github.com/kmiit/twrp_device_oplus_sm87xx) | TWRP 设备树和 SM8750 recovery 实现参考 | `ALREADY_REFERENCED` | 已用于 [TWRP 研究文档](twrp.md)；新提交不增加实机结论 |
-| [酷安 OnePlus 13T 类原生 ROM 线索与排重](coolapk-rom-index.md) | 汇总 PixelOS、DerpFest、LineageOS 及只有目录线索的候选包 | `COMMUNITY_CLAIM + DEDUPED + NOT_TESTED` | 按 ROM 家族排重；帖子更新和启动进度不另算一个 ROM |
-| [OnePlus pagani files on SourceForge](https://sourceforge.net/projects/oneplus-pagani/files/) | 国外 OnePlus 13T 类原生 ROM/文件发布入口 | `LINK_RECORDED + DIRECTORY_CHECKED + NOT_REVIEWED + NOT_TESTED` | 已确认目录含六个 ROM 家族；目录存在仍不代表兼容性、安全性或 LineageOS 源码继承关系 |
+| [OnePlus pagani files on SourceForge](https://sourceforge.net/projects/oneplus-pagani/files/) | 国外 OnePlus 13T 类原生 ROM/文件发布入口 | `LINK_RECORDED + NOT_REVIEWED + NOT_TESTED` | 这是文件目录，不是兼容性或安全背书；下载前逐项确认维护者、版本、校验值和安装说明 |
 
 ## 后续采用顺序
 
 1. 先固定候选仓库的 branch、commit 与许可证。
-2. 与本仓库冻结的 LineageOS 23.2 manifest 做最小 diff，按“指纹、显示、相机、构建补丁”拆分。
+2. 与本仓库冻结的 LineageOS 23.2 manifest 做最小 diff，按“指纹、显示、相机、Wi-Fi、构建补丁”拆分。
 3. 只在可回滚的测试分支构建；主机验证和设备验证分别记录。
 4. 指纹与 HDR 必须补齐日志、触发条件和回归矩阵，不能仅以界面出现或单次成功判定。
 5. 外部 ROM、recovery、root/隐藏模块和网盘包在完成来源与哈希审计前，不进入仓库 Release，也不提升为已验证方案。
