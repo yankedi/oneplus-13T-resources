@@ -30,12 +30,12 @@
 | [`ABNOTF/android_device_oneplus_sm8750-common@5018caf`](https://github.com/ABNOTF/android_device_oneplus_sm8750-common/tree/5018cafefeb84ddc7ad1beda21f6d70ed6f28163) | `patches_for_pagani` 指定的 `device/oneplus/sm8750-common` 构建输入 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | `lineage-23.2`；与 LineageOS common 冻结基线已分叉，指南引用不等于本仓库构建验证 |
 | [`zzkeier/android_device_oneplus_pagani@f935f38`](https://github.com/zzkeier/android_device_oneplus_pagani/tree/f935f38673bc581a09944ec342984816c7db78ca) | `lineage-23.0` 机型设备树实现参考 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | 与本仓库 `lineage-23.2` 成功构建基线不是同一分支 |
 | [`zzkeier/android_device_oneplus_sm8750-common@4247c19`](https://github.com/zzkeier/android_device_oneplus_sm8750-common/tree/4247c19bb791f9ff293e0e169380c83a46c10bd2) | common 设备树和 2.4 GHz Wi-Fi 候选差异的分支级参考 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | `lineage-23.2`；包含下一行的 `9280681`，但整棵树还有其他独有提交 |
-| [`sm8750-common@9280681`：pagani 2.4 GHz Wi-Fi 修复](https://github.com/zzkeier/android_device_oneplus_sm8750-common/commit/92806812c82f10d42ea663c1b6348c2a97294d7b) | 精确比对 Wi-Fi 固件搜索路径与新增的 ODM 配置文件条目 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | fork 中的候选 commit；尚未进入本仓库冻结的 LineageOS common tree |
+| [`sm8750-common@9280681`：pagani 2.4 GHz Wi-Fi 修复](https://github.com/zzkeier/android_device_oneplus_sm8750-common/commit/92806812c82f10d42ea663c1b6348c2a97294d7b) | 精确比对 Wi-Fi 固件搜索路径与新增的 ODM 配置文件条目 | `SOURCE_VERIFIED + STOCK_FILES_VERIFIED + NOT_APPLIED + NOT_TESTED` | 两个文件已在 `.501` 找到，但普通运行路径未证明会选择它们，也没有本机 2.4 GHz 复测 |
 | [`renhiyama/android_device_oneplus_pagani@04be737`](https://github.com/renhiyama/android_device_oneplus_pagani/tree/04be737a8349ffe940addaa75f3ea8b7140c1fc6) | Evolution X XDA 源码入口公开的 `pagani` 机型树，定向参考 UDFPS 和区域适配 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | `op13s`；只收源码，不把对应论坛 ROM 的旧测试结果外推到当前构建 |
 | [`renhiyama/android_device_oneplus_sm8750-common@b83096a`](https://github.com/renhiyama/android_device_oneplus_sm8750-common/tree/b83096a7331d33a5732f38eb4bbfc4b781f54d87) | Evolution X XDA 源码入口公开的 common 树，定向比较指纹 enrollment shim 与 touchDaemon SELinux 规则 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | 源码注释声称处理解锁状态下新指纹录入；尚未在当前设备验证 |
 | [`renhiyama/vendor_oplus_camera@563c432`](https://github.com/renhiyama/vendor_oplus_camera/tree/563c432ecd67c645cbc9ed20de7959d6173f5d34) | 同一 XDA 源码入口公开的 OPlus Camera vendor 树 | `SOURCE_INSPECTED + NOT_APPLIED + NOT_TESTED` | 含 APK、库和其他 proprietary 内容；只登记链接，不复制二进制，且不是当前指纹问题的优先输入 |
 | [`Neveark/android_device_oneplus_sm8750-common@86ca73e`](https://github.com/Neveark/android_device_oneplus_sm8750-common/tree/86ca73eaa40b6d06e2f9fd2a4336fd562aa101c9) | 用户筛选保留的 common 树，比较指纹传感器参数 shim 及其他公共层差异 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | 当前只取得 common 树，不推定可与任意 `pagani` 树直接组成正确构建 |
-| [RandomLemon/android_hardware_oplus](https://github.com/RandomLemon/android_hardware_oplus) | OPlus hardware、UDFPS/FOD shim 候选实现参考 | `LINK_CHECKED + NOT_REVIEWED + NOT_TESTED` | 截图与仓库的关联由资料提供者给出；尚未定位决定性 commit 或文件 |
+| [`RandomLemon/android_hardware_oplus@5e5ff9a`](https://github.com/RandomLemon/android_hardware_oplus/tree/5e5ff9a5bfce2183e538c4a00b3fd51d4e8719c8) | OPlus hardware、UDFPS/FOD shim 候选实现参考 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | 已定位 `OplusFodShim.cpp` 与五个相关历史提交；只适合定向移植，不应整棵替换当前 `hardware/oplus` |
 | [LineageOS 官方 OnePlus 13（dodge）构建指南](https://wiki.lineageos.org/devices/dodge/build/) | 参考 LineageOS 官方构建环境、同步、专有文件提取和编译流程 | `LINK_CHECKED + NOT_APPLIED_TO_PAGANI` | `dodge` 是 OnePlus 13，不是 OnePlus 13T 的 `pagani`；不能照搬设备命令、分区或专有文件 |
 
 LineageOS Wiki 当前没有检索到 `pagani` 的官方设备构建页。因此，`dodge` 页面只能作为同代设备的流程示例，实际 manifest、lunch target、proprietary files 和分区配置仍以 pagani 源码为准。
@@ -55,13 +55,19 @@ LineageOS Wiki 当前没有检索到 `pagani` 的官方设备构建页。因此�
 
 Neveark 历史中的 [`cb33454`](https://github.com/Neveark/android_device_oneplus_sm8750-common/commit/cb33454925ab2bec9eb4077a1cfeea4b9b86f3fa) 是同一两文件改动在另一基线上的移植，不重复列为第二条修复；其后 [`4106c3d`](https://github.com/Neveark/android_device_oneplus_sm8750-common/commit/4106c3dba07896445fcbe251879e3143c6964847) 又移除两个额外 WCNSS proprietary 条目。排重和冻结 HEAD 状态见[设备树比较](device-tree-comparison.md#24-ghz-提交排重)。
 
-现有冒烟测试中的 Wi-Fi `PASS` 只记录了约 500 Mbps 的 L2 吞吐，没有单独记录频段、信道、配置文件加载路径或 2.4 GHz 复测，因此既不能证明当前构建存在该问题，也不能证明候选 commit 已修复本机。采用前应先确认 stock/ODM 中两个新增文件真实存在，再做最小 diff 构建，并分别记录 2.4 GHz 与 5 GHz 的关联、吞吐、热点和重连结果。
+`.501` 文件级审计已经确认两个新增文件真实存在，并记录了各自 SHA-256；但原厂 `init.oplus.wifi.sh` 在普通路径仍选择基础 `WCNSS_qcom_cfg.ini`，roam 文件只用于工程测试属性。另一份可选 cmcc 配置的原厂 helper 没有出现在所查候选源码／专有清单中；提交新增的 firmware 搜索目录 `/odm/etc/wifi/` 与两个文件的实际路径 `/odm/vendor/etc/wifi/` 也不同。详见 [`.501` 交叉审计](stock-501-cross-audit.md#24-ghz-wi-fi)。
+
+现有冒烟测试中的 Wi-Fi `PASS` 只记录了约 500 Mbps 的 L2 吞吐，没有单独记录频段、信道、配置文件加载路径或 2.4 GHz 复测，因此既不能证明当前构建存在该问题，也不能证明候选 commit 已修复本机。采用前先在现有构建复现，并分别记录 2.4 GHz 与 5 GHz 的关联、吞吐、热点、重连、相关属性和 persist 配置哈希。
 
 ## 指纹 / UDFPS 线索
 
 ### OplusFodShim 与 hardware/oplus
 
-用户提供的讨论截图中，`INT16` 将其方案概括为 `OplusFodShim`，并称调整后 AOD、熄屏指纹正常；同一讨论还提到用该方案替换另一套实现。该说法目前只记为 `COMMUNITY_CLUE + NOT_TESTED`，候选代码入口是 [RandomLemon/android_hardware_oplus](https://github.com/RandomLemon/android_hardware_oplus)。
+用户提供的讨论截图中，`INT16` 将其方案概括为 `OplusFodShim`，并称调整后 AOD、熄屏指纹正常；同一讨论还提到用该方案替换另一套实现。社区效果描述仍只记为 `COMMUNITY_CLUE + NOT_TESTED`，但候选代码已经固定到 [`RandomLemon/android_hardware_oplus@5e5ff9a`](https://github.com/RandomLemon/android_hardware_oplus/tree/5e5ff9a5bfce2183e538c4a00b3fd51d4e8719c8)。
+
+该冻结点把 `OplusFodShim.cpp` 编进现有 `libshims_aidl_fingerprint_v2/v3/v4.oplus`。源码同时监测 `/sys/kernel/oplus_display/fp_state`、在按下／抬起或 HAL vendor acquired code `22`／`23` 时写 `notify_fppress=1/0`，并在认证成功、错误或会话关闭时清除状态。它提供了完整的事件桥候选，但没有提供实际 HAL 注入／加载和设备行为验证。
+
+与已构建的 [`LineageOS/android_hardware_oplus@ec3b821`](https://github.com/LineageOS/android_hardware_oplus/tree/ec3b8211676f55ed09905c4c336356acedc040d3) 比较时，两侧从共同祖先分开后分别有 30／9 个独有提交，HEAD 间有 1,786 个路径差异；不能整体换树。指纹目录只有 `Android.bp`、`OplusFodShim.cpp` 和 `SensorPropsShim.cpp` 三个路径不同，其中当前 LineageOS 的 `SensorPropsShim` 还包含较新的 `iconlocation`／DRM 分辨率逻辑。因此后续候选边界是：保留当前 SensorProps 和其余 `hardware/oplus`，只移植 OplusFodShim 及必要构建依赖；先验证 `.501` init 脚本与现有通用 SELinux 规则形成的访问链，只有实机拒绝时再补规则。
 
 ![关于 OplusFodShim、AOD 和熄屏指纹的社区讨论](../assets/community-clues/2026-08-24-fingerprint-oplusfodshim.jpg)
 
@@ -69,11 +75,11 @@ Neveark 历史中的 [`cb33454`](https://github.com/Neveark/android_device_onepl
 
 ### `notify_fppress` 事件桥接
 
-另一张截图中，`Synecdoche` 将指纹修复思路概括为：监测每次手指按下事件，并向 `/sys/kernel/oplus_display/notify_fppress` 写入 `1`。这与现有 [LineageOS UDFPS 根因边界](lineageos-23.2.md#udfps-根因边界)中的待查节点相符，但仍缺少完整实现和本机回归证据。
+另一张截图中，`Synecdoche` 将指纹修复思路概括为：监测每次手指按下事件，并向 `/sys/kernel/oplus_display/notify_fppress` 写入 `1`。这与现有 [LineageOS UDFPS 根因边界](lineageos-23.2.md#udfps-根因边界)相符；源码与 `.501` 现已证明候选事件桥和基础访问链分别存在，但组合尚未进入当前构建，也没有本机回归证据。
 
 ![关于 notify_fppress 节点的社区回复](../assets/community-clues/2026-08-24-fingerprint-notify-fppress.jpg)
 
-后续若采用这条线索，至少还要核对 finger-down/up 生命周期、节点权限、ueventd、SELinux、HBM、AOD/熄屏路径，以及 `session.onUiReady()` 是否真实到达 HAL；不能只凭一次写入就标记指纹为修复。
+后续若采用这条线索，先沿用现有 stock init／通用 HAL 访问链并核对 finger-down/up 生命周期、节点上下文、AVC、HBM、AOD/熄屏路径，以及 `session.onUiReady()` 是否真实到达 HAL；只有真实权限拒绝才添加最小规则，不能只凭一次写入就标记指纹为修复。
 
 ## 显示 HDR 线索
 
@@ -102,7 +108,7 @@ Neveark 历史中的 [`cb33454`](https://github.com/Neveark/android_device_onepl
 - HMA-OSS 被列为隐藏可疑应用的候选工具，可导入现成预设。
 - 文本观察到：root 环境下启用 Scene 的无障碍服务可能触发部分应用检测；出现问题时可把关闭该无障碍服务作为排查变量。
 
-配套文件仅登记原始外链：[123 云盘打包链接（密码 `INT8`）](https://1817114020.share.123pan.cn/123pan/8MYVVv-QFmDh?pwd=INT8)。本仓库没有下载、检查或重新上传该包，也没有确认其中各文件的项目来源、版本、许可证、哈希或安全性。
+配套文件只登记不含访问口令的 [123 云盘资料入口](https://1817114020.share.123pan.cn/123pan/8MYVVv-QFmDh)；用户提供的访问口令不在公开仓库保存。本仓库没有下载、检查或重新上传该包，也没有确认其中各文件的项目来源、版本、许可证、哈希或安全性。
 
 这组资料只用于研究和兼容性排障。完整性绕过可能降低设备安全性、违反应用或服务规则；不得上传、共享或复用来源不明的私有 keybox。收录工具名称不代表本仓库推荐规避金融、支付、企业管理或反作弊系统的安全控制。
 

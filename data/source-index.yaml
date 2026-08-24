@@ -23,6 +23,110 @@ source_policy:
   raw_artifacts_committed: false
   scoped_context_images_committed: true
 
+stock_501_host_audit:
+  document: "docs/stock-501-cross-audit.md"
+  checked_on: "2026-08-24"
+  status: "HOST_VERIFIED + MATCHING_PUBLIC_OTA + NOT_LIVE_SLOT_DUMP"
+  source:
+    index_url: "https://roms.danielspringer.at/index.php?view=ota"
+    api_url: "https://roms.danielspringer.at/api/ota.php?model=PKX110"
+    delivery: "OPlus CDN signed temporary URL; temporary URL intentionally not recorded"
+  package:
+    visible_version: "PKX110_16.0.3.501(CN01)"
+    ota_build: "PKX110_11.C.39_1390_202601062328"
+    android: 16
+    sdk: 36
+    security_patch: "2026-01-01"
+    size_bytes: 8430217707
+    md5: "4b08985d35a0fa74c5041ac96d5efb0b"
+    sha256: "5df62c0fb98a540950c69667ac9abfff8635fc502e8cb123af7e0f1175122844"
+    zip_entries: 6
+    zip_crc_test: "PASS"
+  payload:
+    size_bytes: 8430211175
+    sha256: "9fdfc47e2f5a147d68f074e2fb2602a575eb5926d60d7a230892c01a2b40c88c"
+    hash_verification: "Independent streamed SHA-256 matches decoded payload_properties FILE_HASH"
+    metadata_size_bytes: 301318
+    metadata_hash_sha256: "11d3d6bb67c2024854672f259ca10882ddf6a69356f88d664a02a5d063b18ed4"
+    manifest_version: 2
+    block_size: 4096
+    partition_count: 54
+  download_probe:
+    method: "eight HTTP ranges followed by local concatenation"
+    transfer_seconds_approx: 2083
+    average_bytes_per_second_approx: 4047152
+    average_mb_per_second_approx: 4.047
+    average_mib_per_second_approx: 3.860
+    boundary: "Transfer estimate excludes local concatenation, extraction, and hashing"
+  selected_partition_images:
+    - name: "odm"
+      size_bytes: 1871388672
+      sha256: "2067dece06a5ec9654ac9a541df74171c33fc6c29e1b61cfb744101085bf97d6"
+    - name: "my_product"
+      size_bytes: 1625628672
+      sha256: "bd06f48316b9ed45344b03ec18e024b194fc6ffe9ddcb06cce27ee861d8764c7"
+    - name: "vendor"
+      size_bytes: 754294784
+      sha256: "3727bc78f03fd8e25e2e2cbe230b88030d367a252b16576118ddf5bd60a19de3"
+    - name: "system_ext"
+      size_bytes: 853102592
+      sha256: "b7008bf941f7dbea63d5cb76029601fcf03b6ea8a76544f8fe546b2867cceac5"
+    - name: "product"
+      size_bytes: 9203712
+      sha256: "29296bc84711be82a25f535002652edb76fde0a7a348cf188877899a3286a167"
+    - name: "my_carrier"
+      size_bytes: 335872
+      sha256: "407e750d408567cd2296c8507faea14b342c9bea44a9bf5277c36a23a239a82f"
+    - name: "my_region"
+      size_bytes: 3301376
+      sha256: "ef51d5e4a5206b9562edc5cc83f9e2bc26daa85438d94a33751161b55f07b5df"
+    - name: "vendor_boot"
+      size_bytes: 100663296
+      sha256: "457728c544e4e162b8fea3fa4d71c975279471c82ade62fdbec2b0c707107fc5"
+    - name: "init_boot"
+      size_bytes: 8388608
+      sha256: "eef84ca8aef1ced199b384cb5776b433893c0a0ee75030b38a706c9df39b45b5"
+    - name: "vendor_dlkm"
+      size_bytes: 141381632
+      sha256: "c6acc532c38be104942b2725aeaeb4acb27bf2cad5500fd2cd10ba16127ce313"
+    - name: "dtbo"
+      size_bytes: 25165824
+      sha256: "18d906153bc76c0fdbd6edd9899383e3fc898c17b8affcadc781024002108768"
+  fingerprint_findings:
+    uff_service_sha256: "4a66687057edd8d504dfd5145e50c1adc40f8adb640c1a21806edaeaea0d81c5"
+    display_init_rc_sha256: "d0283084117ef4f60ea17ca20ac9669587d47b0285c9cd603ec17dddf4adec56"
+    stock_node_setup: "notify_fppress is chowned system:system and chmod 0666 on boot"
+    source_access_chain: "Frozen common lists/imports the stock display rc; frozen hardware/oplus labels /kernel/oplus_display vendor_sysfs_graphics and grants hal_fingerprint_default rw access"
+    stock_service_strings: ["waitUiready", "postUiready", "onUiReady", "ro.boot.vbmeta.device_state", "finger down", "finger up"]
+    uff_firmware_paths: "20/20 frozen pagani UFF firmware entries present"
+    conclusion: "Event bridge is the leading source gap; reuse and device-verify the existing access chain before adding policy"
+  wifi_findings:
+    base_config_sha256: "e4eb70484b0411a6728a73057db88dd4c36b6d13d0f1698ee5723fa6041206d9"
+    roam_config_sha256: "406af0ea181b77d5104f85b10a3ece87e3a9a2ec981e2b5153a22d271600d960"
+    cmcc_config_sha256: "ffc0698535573fc4bf0451de9eec5c24033693aadf1ed9d08f24fd69af7f4a49"
+    selection_boundary: "Normal stock init path selects the base file; roam is engineer-mode-specific, and the separate cmcc selector helper is absent from checked source lists"
+    candidate_commit: "92806812c82f10d42ea663c1b6348c2a97294d7b"
+    conclusion: "Stock file existence verified; 2.4 GHz effect and normal-runtime selection not verified"
+  camera_findings:
+    kinginu_exact_tag_commit: "076bf52e7d9b88b5620f83efe7276847cb20a18c"
+    kinginu_odm_files: "101/101 present and SHA-256 identical to stock .501"
+    frozen_pagani_camera_paths: "916/916 present in extracted .501 partitions"
+    conclusion: "Inventory and provenance verified; full ColorOS camera framework behavior not inferred"
+  carrier_findings:
+    carrier_config_common_apk_sha256: "336bdf48e7c91e7fb594ecdbe91f611d9c24e44b602964f5588c9d6039021559"
+    oplus_carrier_config_apk_sha256: "a6e7694ab3004d7fe67f5ca834d81eb5c222494e89cfe54fb8038edfa2536dbf"
+    finding: "China LTE threshold blocks match the frozen common overlay; OPlus NR threshold arrays found are in Japanese operator blocks, not CMCC/CU/CT/CBN"
+    excluded_misreadings: "ro.oplus.radio.lte_rsrp_thresholds is LTE/ColorOS-specific; oplus_carrier_ims_rtp_redun arrays are IMS media thresholds"
+  tools:
+    payload_dumper: "vm03/payload_dumper@2f0a964b8b77c6244e3e12735f85539c938f9c97"
+    erofs_utils: "1.7.1"
+    mkbootimg: "AOSP@d2bb0af5ba6d3198a3e99529c97eda1be0b5a093"
+    apktool: "3.0.3; jar sha256 dbf930b076c6b9be08d57c449cacefc3bdd6b71ebd59b3066fc0e1f5b14f9423"
+  redistribution:
+    raw_ota_or_images_committed: false
+    proprietary_files_committed: false
+    committed_material: "paths, hashes, counts, source commits, configuration semantics, and conclusions only"
+
 community_source_exceptions:
   - platform: "CoolApk"
     account_name: "皓皓的小月"
@@ -79,10 +183,12 @@ camera_porting_references:
   - title: "OnePlus 13T Camera Fix for OxygenOS"
     url: "https://github.com/kinginu/oneplus13t-fix-camera"
     checked_commit: "698cdca07efc12f9d5c8d3ad134e011289bcabd0"
-    checked_on: "2026-08-23"
+    exact_501_tag_commit: "076bf52e7d9b88b5620f83efe7276847cb20a18c"
+    checked_on: "2026-08-24"
     target: "OnePlus 13T converted to OxygenOS CPH2723"
     finding: "Bind-mounts ColorOS-derived ODM camera config, camera libraries/plugins, and camera.oemlayer.so; not a LineageOS compatibility proof"
-    status: "SOURCE_VERIFIED + NOT_TESTED_ON_LINEAGE"
+    stock_cross_check: "At exact CPH2723_16.0.3.501 tag, 101/101 module/odm files are present and SHA-256-identical in extracted PKX110 .501 ODM"
+    status: "SOURCE_VERIFIED + STOCK_FILES_HOST_VERIFIED + NOT_TESTED_ON_LINEAGE"
 
 pending_references:
   updated_on: "2026-08-24"
@@ -110,6 +216,7 @@ pending_references:
         - repository_url: "https://github.com/ABNOTF/android_device_oneplus_sm8750-common"
           branch: "lineage-23.2"
       finding: "Contains a build guide plus one SystemUI UDFPS patch and one Aperture camera-ID patch; it is not itself a device tree"
+      udfps_boundary: "The patch writes notify_fppress from SystemUI, but the checked guide only lists/applies the camera patch; existing generic access covers the fingerprint HAL domain and does not prove the SystemUI writer domain can write the node"
       intended_use: "candidate pagani build guide and patch reference"
       status: "SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED"
     - title: "ABNOTF android_device_oneplus_pagani"
@@ -153,7 +260,8 @@ pending_references:
       checked_on: "2026-08-24"
       intended_use: "candidate device-tree comparison"
       status: "SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED"
-      note: "The branch differs from the repository's frozen successful-build lineage-23.2 baseline"
+      fingerprint_finding: "Defines local .pagani SensorProps/Fppress/boot-state shims and SELinux rules, but the checked device.mk and common blob fixup do not build or inject those .pagani libraries"
+      note: "The branch differs from the repository's frozen successful-build lineage-23.2 baseline; source presence alone does not prove the local fingerprint shim enters an image"
     - title: "zzkeier android_device_oneplus_sm8750-common"
       repository_url: "https://github.com/zzkeier/android_device_oneplus_sm8750-common"
       url: "https://github.com/zzkeier/android_device_oneplus_sm8750-common/tree/4247c19bb791f9ff293e0e169380c83a46c10bd2"
@@ -167,6 +275,7 @@ pending_references:
         unique_commit_counts: "LineageOS 15; zzkeier 5"
       intended_use: "candidate common device-tree comparison"
       status: "SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED"
+      fingerprint_finding: "Adds ueventd ownership for fp_touch_state and notify_fppress, while its blob fixup still injects libshims_aidl_fingerprint_v3.oplus.so rather than the pagani-local shim"
     - title: "sm8750-common pagani 2.4 GHz Wi-Fi fix"
       repository_url: "https://github.com/zzkeier/android_device_oneplus_sm8750-common"
       url: "https://github.com/zzkeier/android_device_oneplus_sm8750-common/commit/92806812c82f10d42ea663c1b6348c2a97294d7b"
@@ -184,8 +293,8 @@ pending_references:
         frozen_and_checked_head: "44ad18fa12b51983a36fb7ec67c54a6b4c032859"
         finding: "The successful-build baseline and current LineageOS lineage-23.2 head do not contain these changes"
       intended_use: "candidate 2.4 GHz Wi-Fi fix and common device-tree comparison"
-      status: "SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED"
-      note: "Verify the two ODM files exist in the selected stock source, then test 2.4 GHz and 5 GHz separately; do not treat the commit title as device verification"
+      status: "SOURCE_VERIFIED + STOCK_FILES_VERIFIED + NOT_APPLIED + NOT_TESTED"
+      note: "Both added files exist in .501, but normal stock init selects the base config and the commit does not include the separate cmcc selector helper; test 2.4 GHz and 5 GHz plus the effective persist config before adoption"
       duplicate_lineage:
         - repository_url: "https://github.com/Neveark/android_device_oneplus_sm8750-common"
           commit: "cb33454925ab2bec9eb4077a1cfeea4b9b86f3fa"
@@ -254,14 +363,43 @@ pending_references:
       note: "dodge is not pagani; device-specific commands and files must not be copied blindly"
   hardware_and_fingerprint:
     - title: "android_hardware_oplus"
-      url: "https://github.com/RandomLemon/android_hardware_oplus"
-      default_branch_observed: "lineage-23.2"
+      repository_url: "https://github.com/RandomLemon/android_hardware_oplus"
+      url: "https://github.com/RandomLemon/android_hardware_oplus/tree/5e5ff9a5bfce2183e538c4a00b3fd51d4e8719c8"
+      branch: "lineage-23.2"
+      checked_commit: "5e5ff9a5bfce2183e538c4a00b3fd51d4e8719c8"
+      committed_on: "2026-07-27"
+      checked_on: "2026-08-24"
+      baseline_relationship:
+        repository_url: "https://github.com/LineageOS/android_hardware_oplus"
+        baseline_commit: "ec3b8211676f55ed09905c4c336356acedc040d3"
+        merge_base: "dad4fa2064230191bb616f17cf660423dfd31d94"
+        unique_commit_counts: "LineageOS 30; RandomLemon 9"
+        head_path_changes: 1786
+        fingerprint_path_changes:
+          - "fingerprint/shims/Android.bp"
+          - "fingerprint/shims/OplusFodShim.cpp"
+          - "fingerprint/shims/SensorPropsShim.cpp"
+      implementation:
+        source_path: "fingerprint/shims/OplusFodShim.cpp"
+        source_commit: "5e5ff9a5bfce2183e538c4a00b3fd51d4e8719c8"
+        node_inputs:
+          - "/sys/kernel/oplus_display/fp_state"
+        node_outputs:
+          - "/sys/kernel/oplus_display/notify_fppress"
+        acquired_codes: "22 = finger down; 23 = finger up"
+        related_commits:
+          - "c82be04e72e6184f03947211a784f9480d1b7938"
+          - "c9e5a002f6790312d73ac4bb7fb5d00eb74a97c3"
+          - "1e58224a7fcde72852143ebfe14dcc73fea1a144"
+          - "a840287e3eb45098563cca8c3478e2a47daf619c"
+          - "5e5ff9a5bfce2183e538c4a00b3fd51d4e8719c8"
       intended_use: "candidate OPlus hardware and UDFPS/FOD shim comparison"
-      status: "LINK_CHECKED + NOT_REVIEWED + NOT_TESTED"
+      status: "SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED"
+      note: "Do not replace the whole hardware tree. Preserve the current newer SensorPropsShim and port only the event bridge/build wiring first; the stock init plus generic HAL access chain already exists and should be device-verified before adding policy."
   root_and_hiding:
     - title: "User-provided DerpFest root/integrity/hiding bundle"
-      url: "https://1817114020.share.123pan.cn/123pan/8MYVVv-QFmDh?pwd=INT8"
-      password: "INT8"
+      url: "https://1817114020.share.123pan.cn/123pan/8MYVVv-QFmDh"
+      access_note: "Owner-supplied access code intentionally not published"
       claimed_components:
         - "KernelSU-Next"
         - "SUSFS"

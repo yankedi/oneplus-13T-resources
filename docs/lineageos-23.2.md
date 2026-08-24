@@ -104,19 +104,21 @@
 
 已经确认：sensor、TA、vendor HAL、VINTF、framework provider 和 overlay 显示链存在；失败发生在 OPlus HAL 的 `waitUiready` 门。Settings enrollment 场景没有在约 502 ms 窗口内向 HAL 送达 `session.onUiReady()`。
 
-因此第一优先级不是更换指纹 APK、vendor blob、firmware 或盲目忽略错误，而是补齐并验证：
+`.501` 文件级审计进一步确认：原厂 `init.oplus.display.rc` 会把 `notify_fppress` 设为 `system:system 0666`；冻结 common 会导入该 RC，冻结 `hardware/oplus` 也已有 fingerprint HAL 对 `/kernel/oplus_display` 通用类型的读写规则。因此第一优先级不是更换指纹 APK、vendor blob、firmware、预先堆叠 SELinux 规则或盲目忽略错误，而是补齐并验证：
 
 1. kernel 是否提供 `/sys/kernel/oplus_display/notify_fppress`；
-2. node ownership、ueventd 与 SELinux；
-3. 当前 Android 16 SystemUI 的 finger-down/up 与取消/休眠清理；
-4. `UDFPS_UI_READY` → `session.onUiReady()` 是否真实到达 HAL；
-5. HBM、触控、手势与解锁的回归。
+2. 现有 init ownership/mode 与通用 SELinux 链在实机是否生效，有无 AVC；
+3. 当前 v3 shim 中加入最小 `OplusFodShim` 事件桥后是否真实加载；
+4. finger-down/up、`notify_fppress`、`waitUiready`／`postUiready` 的顺序与取消/休眠清理；
+5. HBM、触控、手势、AOD 与解锁的回归。
 
 ## 蜂窝信号格
 
 当时 60 秒采样为 NR SA n1，ssRSRP 中位数约 `-88 dBm`、ssRSRQ `-12 dB`，数据正常；UI 报告 level 2。运行时采用 AOSP 默认 NR SSRSRP 阈值 `[-110, -90, -80, -65]`，且没有有效的 OPlus product CarrierSettings。
 
-因此结论是 **RF 正常，bar mapping/config 有缺口**。修复应从 `.501` 的 carrier-specific 配置和当前 framework 行为入手，不能通过替换 modem/RIL/早期 firmware 解决。
+`.501` 的进一步结果是：官方 common overlay 的中国运营商 LTE 门限与当前 Lineage 对应块一致；OPlus overlay 中发现的 NR SSRSRP/SSSINR 门限属于日本运营商块，CMCC、CU、CT、CBN 块没有同类表。`ro.oplus.radio.lte_rsrp_thresholds` 是 ColorOS LTE 属性，而 `oplus_carrier_ims_rtp_redun_*` 是 IMS 媒体质量门限，两者都不能直接当成中国 NR 状态栏门限。
+
+因此结论仍是 **RF 正常，bar mapping/config 有缺口**，但 `.501` 没有给出一个可直接复制的中国 NR 阈值答案。修复应继续检查运行时 CarrierConfig 选择和当前 framework 行为，不能通过替换 modem/RIL/早期 firmware 解决。文件级证据见 [`.501` 交叉审计](stock-501-cross-audit.md#运营商与信号格)。
 
 ## 不应直接移植的内容
 

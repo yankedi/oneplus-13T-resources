@@ -11,6 +11,7 @@
 - 三棵进入核心逐文件统计的 `device/oneplus/pagani` 机型树；
 - 三棵进入核心逐文件统计的 `device/oneplus/sm8750-common` 公共树；
 - 通过 Evolution X XDA 源码入口定位的一组 `renhiyama` 机型树／公共树和相机 vendor 树，以及用户筛选保留的 `Neveark` common 树；
+- 当前已构建基线与 `RandomLemon` 候选各一棵 `hardware/oplus`，用于定向比较 UDFPS shim；
 - 一棵面向多款 OPLUS SM87xx 设备的 TWRP recovery 树。
 
 另保留两棵 `Oneplus-13T-AOSP` 历史冻结树。它们在 2026-08-24 已不能通过原公开 URL 读取，因此只引用 2026-08-16 留存的 commit 和审计记录，不用当前可访问性改写历史快照。
@@ -220,11 +221,42 @@ common 树相对冻结 LineageOS `44ad18f` 的 merge base 为 `e0721a9406d4262bf
 
 该 HEAD 会给 OPlus 指纹服务加入 `libshims_aidl_fingerprint_v3.oplus.so`，可作为传感器类型、坐标和尺寸参数路径的比较对象；但在此次冻结点没有 renhiyama 的第二个 enrollment shim，也没有其 `sepolicy/vendor/property_contexts` 与 `oplus_touchdaemon.te`。这里只记录差异，不判断哪一套组合正确，也不把仓库名称或 commit 标题当成指纹已修复证据。
 
+## `hardware/oplus` 与 UDFPS 事件桥
+
+本仓库成功构建时冻结的是 [`LineageOS/android_hardware_oplus@ec3b821`](https://github.com/LineageOS/android_hardware_oplus/tree/ec3b8211676f55ed09905c4c336356acedc040d3)。社区截图指向的候选现已固定到 [`RandomLemon/android_hardware_oplus@5e5ff9a`](https://github.com/RandomLemon/android_hardware_oplus/tree/5e5ff9a5bfce2183e538c4a00b3fd51d4e8719c8)：
+
+| 项目 | 已构建 LineageOS | RandomLemon 候选 |
+|---|---|---|
+| 冻结 HEAD | `ec3b8211676f55ed09905c4c336356acedc040d3` | `5e5ff9a5bfce2183e538c4a00b3fd51d4e8719c8` |
+| HEAD 日期 | 2026-07-16 | 2026-07-27 |
+| Git blob 数 | 2,500 | 730 |
+| 从 merge base 的独有提交 | 30 | 9 |
+| 指纹 shim | 当前 `SensorPropsShim`，支持 `iconlocation` 和 DRM 模式推导 | `SensorPropsShim` 加 `OplusFodShim` |
+| 状态 | 已进入成功构建；指纹录入仍失败 | `NOT_APPLIED + NOT_TESTED` |
+
+两棵树的 merge base 是 `dad4fa2064230191bb616f17cf660423dfd31d94`，HEAD 间共有 1,786 个路径差异，所以整棵替换会同时倒退或改变大量与 pagani 指纹无关的接口。限定到 `fingerprint/` 后，只有三个路径不同：`Android.bp`、新增的 `OplusFodShim.cpp`，以及 `SensorPropsShim.cpp`。当前 LineageOS 一侧的 SensorProps 还带有较新的 [`7d36841`](https://github.com/LineageOS/android_hardware_oplus/commit/7d3684150bc3ca73e21507f11e22b87f97d24ba3) `iconlocation`／DRM 分辨率逻辑，不能随候选一起回退。
+
+`OplusFodShim` 的冻结实现会：
+
+- 监测 `/sys/kernel/oplus_display/fp_state`；
+- 在状态变化、AIDL pointer down/up，或 HAL 回调 vendor acquired code `22`／`23` 时写入 `/sys/kernel/oplus_display/notify_fppress`；
+- 在认证成功、错误或 session close 时写 `0` 并重置内部状态；
+- 作为源码被编进现有 `libshims_aidl_fingerprint_v2/v3/v4.oplus`，而已构建 common 树本来就会把 v3 shim 注入 UFF 指纹服务。
+
+因此它是当前 `waitUiready` 超时问题最接近的源码候选，但还不是已验证修复。`.501` 的 `init.oplus.display.rc` 会把 `notify_fppress` 设为 `system:system 0666`；冻结 LineageOS common 的 proprietary list 包含该文件，`init.oplus.rc` 也会导入它。冻结 `hardware/oplus` 还把 `/kernel/oplus_display` 标为 `vendor_sysfs_graphics`，并允许 fingerprint HAL 读写该类。也就是说，缺少专用 ueventd 行不等于访问链缺失。后续最小候选应只移植 `OplusFodShim` 与构建依赖，先验证现有节点模式、上下文、HAL 注入和 HBM 清理；只有实机出现 AVC／权限失败时才追加最小规则。完整文件证据见 [`.501` 交叉审计](stock-501-cross-audit.md)。
+
+另有两个容易误判的源码边界：
+
+- zzkeier pagani 树确实含本地 `FppressShim.cpp` 和 `.pagani` shim 定义，common 树也有 `notify_fppress` 的 ueventd 权限，pagani 策略允许指纹 HAL 访问该节点；但检查到的 `device.mk` 没有构建这些 `.pagani` shim，common `extract-files.py` 实际仍给 OEM 服务注入 `.oplus` v3 shim。因此“文件存在”不等于该实现已进入产物。
+- ABNOTF 的 SystemUI 补丁会直接在 finger down/up 写 `notify_fppress`，但冻结构建指南只列出并应用相机补丁；其 writer 是 SystemUI，而不是已有通用访问规则覆盖的 fingerprint HAL，因此当前源码也没有证明 SystemUI domain 可以写该节点。该补丁同样不能单独作为可落地修复。
+
 ### 2.4 GHz 提交排重
 
 Neveark 历史中的 [`cb33454`](https://github.com/Neveark/android_device_oneplus_sm8750-common/commit/cb33454925ab2bec9eb4077a1cfeea4b9b86f3fa) 与已收录的 [`zzkeier@9280681`](https://github.com/zzkeier/android_device_oneplus_sm8750-common/commit/92806812c82f10d42ea663c1b6348c2a97294d7b) 具有相同作者日期、标题和两项语义改动：扩展 firmware 搜索目录，并加入两个 WCNSS 配置条目。两者因应用基线／上下文不同而具有不同 commit 与 patch ID，视为同一候选实现的移植，不重复登记为第二条修复。
 
 Neveark 随后的 [`4106c3d`](https://github.com/Neveark/android_device_oneplus_sm8750-common/commit/4106c3dba07896445fcbe251879e3143c6964847) 又移除了 `WCNSS_qcom_cfg_roam.ini` 与 `WCNSS_qcom_cfg_cmcc.ini` 两项 proprietary 条目，冻结 HEAD 仍保留扩展 firmware directory。后续验证仍以原始 zzkeier 链接为单一入口，同时记录 Neveark HEAD 的实际状态。
+
+`.501` 审计确认两个额外配置都存在，但没有闭合候选的运行机制：普通原厂 init 路径仍选基础配置，cmcc 选择 helper 不在所查设备树清单中，而且新增 firmware 搜索目录与配置实际目录不同。因此“提交差异已排重”和“原厂文件已确认”都不等于“2.4 GHz 修复已验证”；采用前仍须追踪 persist 配置来源并做分频段实测。详见 [`.501` 交叉审计](stock-501-cross-audit.md#24-ghz-wi-fi)。
 
 ## TWRP recovery 树
 

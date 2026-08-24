@@ -20,7 +20,7 @@
 |---|---|---|
 | 设备身份 | OnePlus 13T；`PKX110` / `OP60F5L1` / `pagani`；SM8750 `sun`；project `24821` | 实机确认 |
 | Stock 历史基线 | `PKX110_15.0.2.302(CN01)`，Android 15；完整 OTA、payload 和已提取镜像完成哈希/签名校验 | 主机与实机确认 |
-| 当前救援槽 | 2026-08-16 时 slot A 为可启动的 ColorOS `16.0.3.501(CN01)` | 实机确认 |
+| 当前救援槽 | 2026-08-16 时 slot A 为可启动的 ColorOS `16.0.3.501(CN01)`；同版本公开完整 OTA 已完成整体、payload 与选定分区哈希审计 | 实机确认 + 主机确认 |
 | 当前测试系统 | slot B 成功启动 LineageOS 23.2 非官方构建，Android 16，kernel 6.6.142 | 实机确认 |
 | TWRP | `recovery_b` 上的 TWRP 3.7.1_16 已通过启动、触控、ADB、FBE 解密、MTP 读取、OTG 等非破坏性测试 | 实机确认 |
 | 指纹 | UDFPS 录入仍失败；OPlus HAL 等待 UI-ready 约 502 ms 后以 vendor error `15001` 退出 | 实机日志确认 |
@@ -49,6 +49,7 @@
 ### 源码比较与候选目录
 
 - [OnePlus 13T 设备树比较](docs/device-tree-comparison.md)
+- [`.501` 原厂包与现有设备树交叉审计](docs/stock-501-cross-audit.md)
 - [候选参考目录（未应用／未验证）](docs/pending-references.md)
 - [AOSP 源码差异审计摘要](docs/aosp-gap-audit.md)
 
@@ -95,9 +96,9 @@
 
 本轮主动外部资料收集已经结束。下面只安排对现有基线和已筛选参考的验证，不以继续堆积论坛链接为目标。
 
-1. 以当前 Android 16 framework 为基线补齐 UDFPS `notify_fppress` / UI-ready 依赖链，并做回归测试。
-2. 从 `.501` product/CarrierSettings 确认中国运营商的真实 NR 信号格阈值；不要通过更换 modem/firmware 解决 UI 映射问题。
+1. 保留当前 SensorProps 与已存在的 stock init／通用 SELinux 访问链，定向移植 `OplusFodShim` 事件桥；先用节点上下文、AVC、加载证明和完整 UDFPS 场景做回归。
+2. `.501` 未给出可直接复制的中国 NR 门限；继续追踪运行时 CarrierConfig 选择与 framework 行为，不把日本运营商、IMS RTP 或 LTE 属性表当成答案，也不更换 modem/firmware。
 3. 重新构建包含正确 Google Clock priv-app allowlist 的 GApps 方案，并以干净安装流程验证；临时 `log` 模式不能当永久修复。
 4. 为蓝牙配对、GNSS 实际定位、相机实拍和长时间通话补充可复现的实机记录。
-5. 对照 `oneplus13t-fix-camera` 的 ODM 文件清单与当前 Lineage vendor tree，区分“缺少设备配置/blob”和“缺少 OPlus framework”两类相机移植依赖。
-6. 按[候选参考目录](docs/pending-references.md)和[设备树比较](docs/device-tree-comparison.md)固定的 commit，再分别审计构建补丁、UDFPS、显示配置与 2.4 GHz Wi-Fi 差异。
+5. 相机 ODM 模块 101/101 哈希一致、当前清单 916/916 路径存在；后续重点转为 HDR、变焦、录像等实机功能矩阵，而不是整批换 blob。
+6. 2.4 GHz Wi-Fi 候选的两个配置已在 `.501` 找到，但普通加载路径未闭合；先做分频段复现并记录 persist 配置来源，再决定是否采用 `9280681`。

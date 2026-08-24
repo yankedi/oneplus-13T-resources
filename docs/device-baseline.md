@@ -1,6 +1,6 @@
 # 设备与版本基线
 
-更新时间：2026-08-23
+更新时间：2026-08-24
 
 ## 设备身份
 
@@ -57,6 +57,18 @@
 | `recovery.img` | `86a343cb3907a21002de7ad013a1054e850a947382892dd4a6227f9afe683cb0` | header v4，kernelless |
 
 哈希只用于识别已经验证过的文件，不提供下载，也不能证明其他来源的同名文件安全。
+
+## 公开 Stock `.501` 参照包
+
+2026-08-24 下载并审计了与救援槽版本相同的公开完整 OTA。它不是当前 A 槽的实时 dump，因此只建立“公开发行包与冻结源码”的主机侧参照：
+
+| 资产 | 大小 | SHA-256 | 状态 |
+|---|---:|---|---|
+| `PKX110_16.0.3.501(CN01)` Full OTA | 8,430,217,707 bytes | `5df62c0fb98a540950c69667ac9abfff8635fc502e8cb123af7e0f1175122844` | ZIP CRC `PASS` |
+| `payload.bin` | 8,430,211,175 bytes | `9fdfc47e2f5a147d68f074e2fb2602a575eb5926d60d7a230892c01a2b40c88c` | 独立流式哈希与 `FILE_HASH` 一致 |
+| 选定的 11 个分区镜像 | 见交叉审计 | 各自与 payload manifest partition hash 一致 | `HOST_VERIFIED` |
+
+OTA 和提取镜像不进入 Git；仓库只记录哈希、路径、数量、冻结源码和结论。完整分区表及指纹、Wi-Fi、相机、运营商交叉结果见 [`.501` 原厂包与现有设备树交叉审计](stock-501-cross-audit.md)。这次提取没有独立复算 ARB rollback index，所以下文 ARB 证据等级不变。
 
 ## Firmware 代际边界
 
