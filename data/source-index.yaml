@@ -399,7 +399,7 @@ pending_references:
   root_and_hiding:
     - title: "User-provided DerpFest root/integrity/hiding bundle"
       url: "https://1817114020.share.123pan.cn/123pan/8MYVVv-QFmDh"
-      access_note: "Owner-supplied access code intentionally not published"
+      access_note: "Access code removed from the current tree; any code previously committed to public Git history must be treated as exposed and rotated or revoked by the owner"
       claimed_components:
         - "KernelSU-Next"
         - "SUSFS"
