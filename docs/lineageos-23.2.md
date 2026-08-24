@@ -98,7 +98,7 @@
 
 上表中的 Wi-Fi `PASS` 没有单独记录频段，因此不能外推为 2.4 GHz 已完成专项验证。[`zzkeier/android_device_oneplus_sm8750-common@9280681`](https://github.com/zzkeier/android_device_oneplus_sm8750-common/commit/92806812c82f10d42ea663c1b6348c2a97294d7b) 是一项待参考的 pagani 2.4 GHz 候选修复：它扩展 ueventd firmware 搜索路径，并把两个额外的 ODM Wi-Fi 配置文件加入 proprietary 列表。
 
-该差异不在本次成功构建冻结的 `LineageOS/android_device_oneplus_sm8750-common@44ad18f` 中，尚未合入、构建或实机测试。具体文件变化和采用前检查项见[待使用／未验证参考](pending-references.md#24-ghz-wi-fi--common-tree-候选修复)。
+该差异不在本次成功构建冻结的 `LineageOS/android_device_oneplus_sm8750-common@44ad18f` 中，尚未合入、构建或实机测试。具体文件变化和采用前检查项见[候选参考目录](pending-references.md#24-ghz-wi-fi--common-tree-候选修复)。
 
 ## UDFPS 根因边界
 

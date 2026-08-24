@@ -1,11 +1,11 @@
-name: 补充公开来源
-description: 提交一个可复核的 OnePlus 13T 公开资料来源
-title: "[来源] "
+name: 来源纠错或明确补充
+description: 纠正已登记来源，或按明确恢复的收集范围提交补充
+title: "[来源维护] "
 labels: ["source"]
 body:
   - type: markdown
     attributes:
-      value: 请提交原始公开来源，不要提交转述或含敏感信息的附件。酷安来源仅接受 source-index 中已经列出的精确例外。
+      value: 本轮主动来源收集已经结束。请优先纠正现有记录；只有仓库所有者已经明确恢复相应收集范围时，才提交新的原始公开来源。不要提交转述或含敏感信息的附件；酷安来源仅接受 source-index 中已经列出的精确例外。
   - type: input
     id: url
     attributes:

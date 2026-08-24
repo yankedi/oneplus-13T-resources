@@ -2,7 +2,8 @@
 
 更新时间：2026-08-23
 
-> **状态：`SOURCE_VERIFIED + COMMUNITY_CLUE + NOT_TESTED_ON_LINEAGE`**  
+> **状态：`SOURCE_VERIFIED + COMMUNITY_CLUE + NOT_TESTED_ON_LINEAGE`**
+>
 > 这条记录讨论的是把 OPlus/ColorOS 原厂相机能力移植到其他系统，不影响当前 LineageOS 已验证的基础 Camera HAL 和普通相机功能 `PASS`。
 
 ## 直接源码线索

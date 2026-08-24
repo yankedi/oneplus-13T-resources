@@ -4,7 +4,12 @@
 
 本仓库不是“一键刷机包”，也不把论坛转述当成事实。目标是把设备资料、源码版本、实机测试、失败路径和恢复边界整理成可追溯、可复核的知识库。
 
-> **高风险提醒**  
+> **资料收集状态：本轮收集已结束（2026-08-24）**
+>
+> 当前仓库转入整理、复核和实机验证阶段。已经筛选保留的资料继续按冻结提交与证据等级维护；未通过筛选的候选不写入文档或来源索引。结束收集不等于停止维护，既有结论仍可由新的实机证据或上游变更修正。
+
+> **高风险提醒**
+>
 > 解锁、刷写、切换槽位、格式化、恢复分区均可能导致数据丢失或设备无法启动。仓库中的历史记录不等于针对另一台设备的操作授权；执行前必须重新确认设备、版本、槽位、文件哈希和回滚路径。
 
 ## 当前已知状态
@@ -25,20 +30,31 @@
 
 完整状态见 [设备与版本基线](docs/device-baseline.md)、[LineageOS 记录](docs/lineageos-23.2.md) 和 [GApps 事件记录](docs/gapps.md)。
 
-## 导航
+## 文档导航
 
-- [记录方法与证据等级](docs/methodology.md)
+### 实机基线与可复现记录
+
 - [设备与版本基线](docs/device-baseline.md)
-- [TWRP 研究与实机验证](docs/twrp.md)
 - [LineageOS 23.2 构建、安装与硬件状态](docs/lineageos-23.2.md)
+- [TWRP 研究与实机验证](docs/twrp.md)
 - [GApps / NikGapps 事件记录](docs/gapps.md)
 - [备份与恢复边界](docs/backup-and-recovery.md)
+
+### 高风险流程与社区参考
+
 - [EDL、Firehose 与 ARB1 待验证引导](docs/edl-arb.md)
-- [OPlus / ColorOS 相机移植线索](docs/camera-porting-clue.md)
 - [PKX110 转 CPH2723 OxygenOS 社区流程参考](docs/oxygenos-conversion.md)
-- [待使用／未验证参考](docs/pending-references.md)
+- [OPlus / ColorOS 相机移植线索](docs/camera-porting-clue.md)
+
+### 源码比较与候选目录
+
 - [OnePlus 13T 设备树比较](docs/device-tree-comparison.md)
+- [候选参考目录（未应用／未验证）](docs/pending-references.md)
 - [AOSP 源码差异审计摘要](docs/aosp-gap-audit.md)
+
+### 方法、数据与参与规则
+
+- [记录方法、收集状态与证据等级](docs/methodology.md)
 - [来源索引（机器可读）](data/source-index.yaml)
 - [功能差异矩阵（TSV）](data/feature-matrix.tsv)
 - [参与和提交规则](CONTRIBUTING.md)
@@ -51,7 +67,7 @@
 2. `docs/` 保存经过整理的事实、实验时间线、失败结论和边界。
 3. `data/source-index.yaml` 保存来源类别、URL、分支、冻结 commit、检查日期和可信状态。
 4. `data/feature-matrix.tsv` 保存适配差异，方便脚本或表格工具处理。
-5. Issue Form 用于提交新链接或测试结果；未经核验的信息不会直接写成事实。
+5. Issue Form 用于提交纠错、测试结果或明确要求补充的新来源；仅有链接且未经筛选的信息不会直接写入事实库。
 6. 每次更新通过 Git commit 留下变更原因；会变化的上游状态同时保留“当时冻结值”和“最近检查值”。
 
 ## 证据等级
@@ -75,11 +91,13 @@
 - CoolApk（酷安）内容默认排除；目前只为 `data/source-index.yaml` 中逐条列出的 ARB1/EDL、相机、指纹和显示 HDR 线索设立有范围、可撤销的例外。例外不扩展到相关账号的其他内容，也不会把社区声明提升为实机事实。
 - 第三方仓库和文件各自遵循其原许可证；本仓库的链接不代表重新授权或背书。
 
-## 目前最重要的待办
+## 封存后的验证队列
+
+本轮主动外部资料收集已经结束。下面只安排对现有基线和已筛选参考的验证，不以继续堆积论坛链接为目标。
 
 1. 以当前 Android 16 framework 为基线补齐 UDFPS `notify_fppress` / UI-ready 依赖链，并做回归测试。
 2. 从 `.501` product/CarrierSettings 确认中国运营商的真实 NR 信号格阈值；不要通过更换 modem/firmware 解决 UI 映射问题。
 3. 重新构建包含正确 Google Clock priv-app allowlist 的 GApps 方案，并以干净安装流程验证；临时 `log` 模式不能当永久修复。
 4. 为蓝牙配对、GNSS 实际定位、相机实拍和长时间通话补充可复现的实机记录。
 5. 对照 `oneplus13t-fix-camera` 的 ODM 文件清单与当前 Lineage vendor tree，区分“缺少设备配置/blob”和“缺少 OPlus framework”两类相机移植依赖。
-6. 按[待使用／未验证参考](docs/pending-references.md)和[设备树比较](docs/device-tree-comparison.md)固定的 commit，再分别审计构建补丁、UDFPS、显示配置与 2.4 GHz Wi-Fi 差异。
+6. 按[候选参考目录](docs/pending-references.md)和[设备树比较](docs/device-tree-comparison.md)固定的 commit，再分别审计构建补丁、UDFPS、显示配置与 2.4 GHz Wi-Fi 差异。

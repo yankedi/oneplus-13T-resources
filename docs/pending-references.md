@@ -1,8 +1,12 @@
-# 待使用／未验证参考
+# 候选参考目录（未应用／未验证）
 
 更新时间：2026-08-24
 
 本页是后续构建、适配和排障的候选资料清单，不是已验证教程。除特别注明外，条目仅完成链接登记或社区线索归档，均不能据此宣称 OnePlus 13T（`PKX110` / `pagani`）已经支持相应功能。
+
+> **目录状态：`CATALOG_FROZEN_AFTER_REVIEW`**
+>
+> 2026-08-24 完成本轮 CoolApk／XDA 候选收集并冻结目录。本页只保留已经筛选通过的参考；最后一轮未通过筛选的 XDA 结果没有写入本页或 `data/source-index.yaml`。后续工作以比较、构建和实机验证现有条目为主。
 
 ## 状态与使用边界
 
@@ -11,6 +15,7 @@
 | `LINK_CHECKED` | 链接在登记时可访问；不代表代码已经审计 |
 | `COMMUNITY_CLUE` | 来自用户提供的社区文本或截图，只用于提出验证方向 |
 | `NOT_REVIEWED` | 尚未逐文件阅读、比对许可证或固定 commit |
+| `NOT_APPLIED` | 已读取或比较源码，但没有进入本仓库记录的构建输入 |
 | `NOT_TESTED` | 尚未在本仓库记录的 PKX110 环境中测试 |
 | `ALREADY_REFERENCED` | 已在其他文档引用，此处只纳入统一入口 |
 
@@ -26,10 +31,10 @@
 | [`zzkeier/android_device_oneplus_pagani@f935f38`](https://github.com/zzkeier/android_device_oneplus_pagani/tree/f935f38673bc581a09944ec342984816c7db78ca) | `lineage-23.0` 机型设备树实现参考 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | 与本仓库 `lineage-23.2` 成功构建基线不是同一分支 |
 | [`zzkeier/android_device_oneplus_sm8750-common@4247c19`](https://github.com/zzkeier/android_device_oneplus_sm8750-common/tree/4247c19bb791f9ff293e0e169380c83a46c10bd2) | common 设备树和 2.4 GHz Wi-Fi 候选差异的分支级参考 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | `lineage-23.2`；包含下一行的 `9280681`，但整棵树还有其他独有提交 |
 | [`sm8750-common@9280681`：pagani 2.4 GHz Wi-Fi 修复](https://github.com/zzkeier/android_device_oneplus_sm8750-common/commit/92806812c82f10d42ea663c1b6348c2a97294d7b) | 精确比对 Wi-Fi 固件搜索路径与新增的 ODM 配置文件条目 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | fork 中的候选 commit；尚未进入本仓库冻结的 LineageOS common tree |
-| [`renhiyama/android_device_oneplus_pagani@04be737`](https://github.com/renhiyama/android_device_oneplus_pagani/tree/04be737a8349ffe940addaa75f3ea8b7140c1fc6) | XDA A1 公开的 `pagani` 机型树，定向参考 UDFPS 和区域适配 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | `op13s`；只收源码，不把 A1 ROM 的旧测试结果外推到当前构建 |
-| [`renhiyama/android_device_oneplus_sm8750-common@b83096a`](https://github.com/renhiyama/android_device_oneplus_sm8750-common/tree/b83096a7331d33a5732f38eb4bbfc4b781f54d87) | XDA A1 公开的 common 树，定向比较指纹 enrollment shim 与 touchDaemon SELinux 规则 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | 源码注释声称处理解锁状态下新指纹录入；尚未在当前设备验证 |
-| [`renhiyama/vendor_oplus_camera@563c432`](https://github.com/renhiyama/vendor_oplus_camera/tree/563c432ecd67c645cbc9ed20de7959d6173f5d34) | XDA A1 的 OPlus Camera vendor 源码入口 | `SOURCE_INSPECTED + NOT_APPLIED + NOT_TESTED` | 含 APK、库和其他 proprietary 内容；只登记链接，不复制二进制，且不是当前指纹问题的优先输入 |
-| [`Neveark/android_device_oneplus_sm8750-common@86ca73e`](https://github.com/Neveark/android_device_oneplus_sm8750-common/tree/86ca73eaa40b6d06e2f9fd2a4336fd562aa101c9) | 用户筛选保留的 A3 common 树，比较指纹传感器参数 shim 及其他公共层差异 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | 当前只取得 common 树，不推定可与任意 `pagani` 树直接组成正确构建 |
+| [`renhiyama/android_device_oneplus_pagani@04be737`](https://github.com/renhiyama/android_device_oneplus_pagani/tree/04be737a8349ffe940addaa75f3ea8b7140c1fc6) | Evolution X XDA 源码入口公开的 `pagani` 机型树，定向参考 UDFPS 和区域适配 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | `op13s`；只收源码，不把对应论坛 ROM 的旧测试结果外推到当前构建 |
+| [`renhiyama/android_device_oneplus_sm8750-common@b83096a`](https://github.com/renhiyama/android_device_oneplus_sm8750-common/tree/b83096a7331d33a5732f38eb4bbfc4b781f54d87) | Evolution X XDA 源码入口公开的 common 树，定向比较指纹 enrollment shim 与 touchDaemon SELinux 规则 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | 源码注释声称处理解锁状态下新指纹录入；尚未在当前设备验证 |
+| [`renhiyama/vendor_oplus_camera@563c432`](https://github.com/renhiyama/vendor_oplus_camera/tree/563c432ecd67c645cbc9ed20de7959d6173f5d34) | 同一 XDA 源码入口公开的 OPlus Camera vendor 树 | `SOURCE_INSPECTED + NOT_APPLIED + NOT_TESTED` | 含 APK、库和其他 proprietary 内容；只登记链接，不复制二进制，且不是当前指纹问题的优先输入 |
+| [`Neveark/android_device_oneplus_sm8750-common@86ca73e`](https://github.com/Neveark/android_device_oneplus_sm8750-common/tree/86ca73eaa40b6d06e2f9fd2a4336fd562aa101c9) | 用户筛选保留的 common 树，比较指纹传感器参数 shim 及其他公共层差异 | `SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED` | 当前只取得 common 树，不推定可与任意 `pagani` 树直接组成正确构建 |
 | [RandomLemon/android_hardware_oplus](https://github.com/RandomLemon/android_hardware_oplus) | OPlus hardware、UDFPS/FOD shim 候选实现参考 | `LINK_CHECKED + NOT_REVIEWED + NOT_TESTED` | 截图与仓库的关联由资料提供者给出；尚未定位决定性 commit 或文件 |
 | [LineageOS 官方 OnePlus 13（dodge）构建指南](https://wiki.lineageos.org/devices/dodge/build/) | 参考 LineageOS 官方构建环境、同步、专有文件提取和编译流程 | `LINK_CHECKED + NOT_APPLIED_TO_PAGANI` | `dodge` 是 OnePlus 13，不是 OnePlus 13T 的 `pagani`；不能照搬设备命令、分区或专有文件 |
 
@@ -37,7 +42,7 @@ LineageOS Wiki 当前没有检索到 `pagani` 的官方设备构建页。因此�
 
 上述 Development、zzkeier、ABNOTF 三套核心机型层／公共层的冻结 HEAD、依赖拓扑、文件数量、Git 分叉、显示、UDFPS、音频、power、proprietary 和 Wi-Fi 差异，以及 renhiyama／Neveark 的指纹定向比较，见 [OnePlus 13T 设备树比较](device-tree-comparison.md)。其中“ABNOTF 实际构建树”只表示构建指南的 clone 命令直接指定了这两个仓库，不表示本仓库已经用它们成功构建或完成设备测试。
 
-XDA A2 未找到可供复用的公开设备树或构建源码，因此没有把该 ROM 本身加入源码候选。此前由用户单独提供的 DerpFest root／隐藏文字仍保留在下方，只作为工具线索，不作为 A2 开源实现。
+用户单独提供的 DerpFest root／隐藏文字保留在下方，只作为工具线索；由于没有与该文字对应的可复用公开设备树或构建源码，本目录不把 DerpFest ROM 本身列为源码候选。
 
 ## 2.4 GHz Wi-Fi / common tree 候选修复
 
@@ -82,7 +87,7 @@ Neveark 历史中的 [`cb33454`](https://github.com/Neveark/android_device_onepl
 
 | 参考 | 计划用途 | 当前状态 | 边界 |
 |---|---|---|---|
-| [XDA：PKX110 转 CPH2723 OxygenOS](https://xdaforums.com/t/rom-pkx110-oxygenos-convert-oneplus-13t-to-13s.4743853/) | A5 的转换拓扑、分区角色、更新限制和风险案例 | `COMMUNITY_GUIDE + NOT_TESTED` | 已整理为[独立索引](oxygenos-conversion.md)；不是刷机建议，未下载或重传论坛文件 |
+| [XDA：PKX110 转 CPH2723 OxygenOS](https://xdaforums.com/t/rom-pkx110-oxygenos-convert-oneplus-13t-to-13s.4743853/) | 转换拓扑、分区角色、更新限制和风险案例 | `COMMUNITY_GUIDE + NOT_TESTED` | 已整理为[独立索引](oxygenos-conversion.md)；不是刷机建议，未下载或重传论坛文件 |
 | [`spike0en/oneplus_archive@99e7002`](https://github.com/spike0en/oneplus_archive/tree/99e7002f229e2b6f817bbaaf873d5875f8c8e980) | PKX110 ColorOS／CPH2723 OxygenOS stock OTA 与分区镜像档案入口 | `SOURCE_VERIFIED_INDEX + ARTIFACTS_NOT_AUDITED` | 社区项目声称文件来自 OEM 且未修改；下载后仍需逐文件核对版本、SHA-256、区域与 ARB，不能把归档标签当成刷写许可 |
 
 冻结源码把 `pagani` 映射到 `PKX110` 和 `CPH2723`，并分别列出 boot 与逻辑分区。此次检查仓库 tag 时观察到 `PKX110_16.0.0.212(CN01)_CN`、`PKX110_16.0.1.301(CN01)_CN`、`CPH2723_16.0.0.211(EX01)_IN` 和 `CPH2723_16.0.1.303(EX01)_IN`；这只是检查时的归档版本快照，不代表覆盖当前 `.501` 或所有 OxygenOS 版本。
@@ -108,7 +113,7 @@ Neveark 历史中的 [`cb33454`](https://github.com/Neveark/android_device_onepl
 | [kmiit/twrp_device_oplus_sm87xx](https://github.com/kmiit/twrp_device_oplus_sm87xx) | TWRP 设备树和 SM8750 recovery 实现参考 | `ALREADY_REFERENCED` | 已用于 [TWRP 研究文档](twrp.md)；新提交不增加实机结论 |
 | [OnePlus pagani files on SourceForge](https://sourceforge.net/projects/oneplus-pagani/files/) | 国外 OnePlus 13T 类原生 ROM/文件发布入口 | `LINK_RECORDED + NOT_REVIEWED + NOT_TESTED` | 这是文件目录，不是兼容性或安全背书；下载前逐项确认维护者、版本、校验值和安装说明 |
 
-## 后续采用顺序
+## 封存后的采用顺序
 
 1. 先固定候选仓库的 branch、commit 与许可证。
 2. 与本仓库冻结的 LineageOS 23.2 manifest 做最小 diff，按“指纹、显示、相机、Wi-Fi、构建补丁”拆分。

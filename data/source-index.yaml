@@ -1,5 +1,11 @@
 schema_version: 2
 last_checked: "2026-08-24"
+collection_state:
+  status: "CLOSED_AFTER_OWNER_REVIEW"
+  closed_on: "2026-08-24"
+  scope: "The current CoolApk and XDA discovery cycle is closed; maintenance now focuses on the selected sources, reproducible device results, corrections, and upstream changes."
+  rejected_candidates_recorded: false
+  resume_condition: "Only after the repository owner explicitly reopens a collection scope"
 device:
   marketing_name: "OnePlus 13T"
   model: "PKX110"
@@ -81,12 +87,11 @@ camera_porting_references:
 pending_references:
   updated_on: "2026-08-24"
   policy: "Catalogued for later review; no entry becomes a build input or device-supported claim without a pinned commit and separate validation record."
-  xda_selection:
+  selection_summary:
     selected_on: "2026-08-24"
     owner_feedback: "The current build's camera and other mentioned functions are usable; fingerprint is the obvious issue reported, without claiming it is the only issue."
-    a1_scope: "Keep public device/common/vendor source trees only; do not use the forum ROM's old camera test as a verdict on the current build."
-    a2_scope: "No reusable public device tree or build source was identified, so no A2 ROM source entry was added."
-    a3_scope: "Keep the Neveark common tree as a fingerprint-focused comparison candidate."
+    evolution_x_source_scope: "Keep the linked public device/common/vendor source trees only; do not use the forum ROM's old camera test as a verdict on the current build."
+    neveark_scope: "Keep the Neveark common tree as a fingerprint-focused comparison candidate."
   device_tree_comparison:
     document: "docs/device-tree-comparison.md"
     checked_on: "2026-08-24"
@@ -200,7 +205,7 @@ pending_references:
         baseline_commit: "dfe9aa41e8154fc89dc217efae564bac6c376216"
         finding: "The checked renhiyama head is a direct descendant with 58 commits after the frozen baseline"
       fingerprint_finding: "Configures hardware/oplus libudfps_extension, qtidisplay OPlus UDFPS, and an org.lineageos.sensor.udfps long-press overlay; screen-off UDFPS booleans remain commented"
-      intended_use: "A1 public pagani source and fingerprint-focused device-tree comparison"
+      intended_use: "Evolution X-linked public pagani source and fingerprint-focused device-tree comparison"
       status: "SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED"
       note: "Source only; the XDA ROM and its old camera observations are not used as a verdict on the owner's current build"
     - title: "renhiyama android_device_oneplus_sm8750-common"
@@ -215,7 +220,7 @@ pending_references:
         merge_base: "e0721a9406d4262bf10138c6f351bcaaac5c0347"
         unique_commit_counts: "LineageOS 13; renhiyama 27"
       fingerprint_finding: "Adds the AIDL sensor-properties shim plus an enrollment-oriented fingerprint property shim, labels vendor.oplus.biometrics.fingerprint properties, and grants touchDaemon read access; all claims remain source comments until device-tested"
-      intended_use: "A1 common source and minimal fingerprint enrollment diff"
+      intended_use: "Evolution X-linked common source and minimal fingerprint enrollment diff"
       status: "SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED"
     - title: "renhiyama vendor_oplus_camera"
       repository_url: "https://github.com/renhiyama/vendor_oplus_camera"
@@ -223,7 +228,7 @@ pending_references:
       branch: "main"
       checked_commit: "563c432ecd67c645cbc9ed20de7959d6173f5d34"
       checked_on: "2026-08-24"
-      intended_use: "A1 public OPlus Camera vendor-tree reference"
+      intended_use: "Evolution X-linked public OPlus Camera vendor-tree reference"
       status: "SOURCE_INSPECTED + NOT_APPLIED + NOT_TESTED"
       redistribution: false
       note: "Contains APKs, native libraries, and other proprietary content; link only, and not a priority input for the current fingerprint issue"
@@ -239,7 +244,7 @@ pending_references:
         unique_commit_counts: "renhiyama 27; Neveark 40"
         head_path_changes: 24
       fingerprint_finding: "Links libshims_aidl_fingerprint_v3.oplus into the OPlus fingerprint service; the checked head lacks renhiyama's second enrollment shim and its touchDaemon fingerprint property sepolicy files"
-      intended_use: "A3 common source and fingerprint-focused comparison"
+      intended_use: "Neveark common source and fingerprint-focused comparison"
       status: "SOURCE_VERIFIED + NOT_APPLIED + NOT_TESTED"
       note: "Only a common tree has been selected; no compatible pagani pairing is inferred"
     - title: "LineageOS official build guide for OnePlus 13 (dodge)"

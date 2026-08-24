@@ -2,7 +2,8 @@
 
 更新时间：2026-08-24
 
-> **当前状态：`COMMUNITY_CLAIM + HOST_VERIFIED_STRUCTURE + NOT_TESTED`**  
+> **当前状态：`COMMUNITY_CLAIM + HOST_VERIFIED_STRUCTURE + NOT_TESTED`**
+>
 > 本页记录一个待验证救援线索，不表示该组三文件已经在 PKX110 上成功进入 Firehose，更不表示可以安全降级或刷写。原压缩包及其中二进制不会进入仓库。
 
 ## 来源与例外范围
@@ -32,7 +33,7 @@ Android 官方对 rollback protection 的定义是：在防篡改存储中记录
 
 “ARB 熔断后无法通过 9008 深刷”不是准确表述。更新后 EDL/9008 入口可能仍存在；失效的可能是特定公开 programmer、签名材料或工具流程。官方售后仍可能使用受授权的工具，未来也可能出现兼容新版本的公开材料，但在实际验证前不能假定任何一组 loader 可用。
 
-### XDA A7 社区警告与证据边界
+### XDA 社区 ARB 警告与证据边界
 
 2026-01-18 的 XDA 帖 [Critical Warning: ColorOS 16.0.8.xxx / 16.0.3.501 Permanent Anti-Rollback](https://xdaforums.com/t/critical-warning-coloros-16-0-8-xxx-16-0-3-501-permanent-anti-rollback-arb-fuse-blown-do-not-update.4775930/)（[首帖固定链接](https://xdaforums.com/t/critical-warning-coloros-16-0-8-xxx-16-0-3-501-permanent-anti-rollback-arb-fuse-blown-do-not-update.4775930/post-90451800)）将 OnePlus 13／13T 的 `16.0.3.501` 列入 ARB 风险警告；[机型列表回复](https://xdaforums.com/t/critical-warning-coloros-16-0-8-xxx-16-0-3-501-permanent-anti-rollback-arb-fuse-blown-do-not-update.4775930/post-90453123)再次把 13／13T `.501` 标为已确认。
 
