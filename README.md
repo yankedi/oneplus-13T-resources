@@ -35,6 +35,7 @@
 - [备份与恢复边界](docs/backup-and-recovery.md)
 - [EDL、Firehose 与 ARB1 待验证引导](docs/edl-arb.md)
 - [OPlus / ColorOS 相机移植线索](docs/camera-porting-clue.md)
+- [PKX110 转 CPH2723 OxygenOS 社区流程参考](docs/oxygenos-conversion.md)
 - [待使用／未验证参考](docs/pending-references.md)
 - [OnePlus 13T 设备树比较](docs/device-tree-comparison.md)
 - [AOSP 源码差异审计摘要](docs/aosp-gap-audit.md)

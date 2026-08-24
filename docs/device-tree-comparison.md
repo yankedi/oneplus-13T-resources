@@ -8,8 +8,9 @@
 
 当前能够递归读取并比较的源码包括：
 
-- 三棵 `device/oneplus/pagani` 机型树；
-- 三棵 `device/oneplus/sm8750-common` 公共树；
+- 三棵进入核心逐文件统计的 `device/oneplus/pagani` 机型树；
+- 三棵进入核心逐文件统计的 `device/oneplus/sm8750-common` 公共树；
+- XDA A1 对应的一组 `renhiyama` 机型树／公共树和相机 vendor 树，以及用户筛选保留的 `Neveark` common 树；
 - 一棵面向多款 OPLUS SM87xx 设备的 TWRP recovery 树。
 
 另保留两棵 `Oneplus-13T-AOSP` 历史冻结树。它们在 2026-08-24 已不能通过原公开 URL 读取，因此只引用 2026-08-16 留存的 commit 和审计记录，不用当前可访问性改写历史快照。
@@ -23,6 +24,8 @@
 | 已构建并实机验证的冻结基线 | [`OnePlus-13T-Development@dfe9aa4`](https://github.com/OnePlus-13T-Development/android_device_oneplus_pagani/tree/dfe9aa41e8154fc89dc217efae564bac6c376216) | [`LineageOS@44ad18f`](https://github.com/LineageOS/android_device_oneplus_sm8750-common/tree/44ad18fa12b51983a36fb7ec67c54a6b4c032859) | 均为 `lineage-23.2`；对应本仓库 2026-08-14 构建基线 |
 | zzkeier 待参考组合 | [`pagani@f935f38`](https://github.com/zzkeier/android_device_oneplus_pagani/tree/f935f38673bc581a09944ec342984816c7db78ca) | [`common@4247c19`](https://github.com/zzkeier/android_device_oneplus_sm8750-common/tree/4247c19bb791f9ff293e0e169380c83a46c10bd2) | 机型层为 `lineage-23.0`，公共层为 `lineage-23.2` |
 | ABNOTF 构建指南指定的实际源码输入 | [`pagani@560f47e`](https://github.com/ABNOTF/android_device_oneplus_pagani/tree/560f47ecd11bb520db4319bde01c0fa03c36fa50) | [`common@5018caf`](https://github.com/ABNOTF/android_device_oneplus_sm8750-common/tree/5018cafefeb84ddc7ad1beda21f6d70ed6f28163) | 均为 `lineage-23.2`；由 [`patches_for_pagani@1818541`](https://github.com/ABNOTF/patches_for_pagani/tree/1818541189e505057f84a34ad4ba86f86e571fb5) 的构建命令直接指定 |
+| XDA A1 公开源码组合 | [`renhiyama pagani@04be737`](https://github.com/renhiyama/android_device_oneplus_pagani/tree/04be737a8349ffe940addaa75f3ea8b7140c1fc6) | [`renhiyama common@b83096a`](https://github.com/renhiyama/android_device_oneplus_sm8750-common/tree/b83096a7331d33a5732f38eb4bbfc4b781f54d87) | 分别为 `op13s`／`lineage-23.2`；来自 [Evolution X XDA 帖的源码入口](https://xdaforums.com/t/rom-unofficial-a16-evolution-x-for-oneplus-13s-pagani-in.4787408/post-90582155)，这里只收源码，不采用该 ROM 作为当前构建评价基准 |
+| 用户筛选保留的 A3 common 候选 | — | [`Neveark common@86ca73e`](https://github.com/Neveark/android_device_oneplus_sm8750-common/tree/86ca73eaa40b6d06e2f9fd2a4336fd562aa101c9) | `lineage-23.2`；当前只取得公共树，不推定与任意 `pagani` 机型树组成可构建组合 |
 | 历史 AOSP 冻结快照 | `Oneplus-13T-AOSP@438f9c9` | `Oneplus-13T-AOSP@faca90d` | 历史 `16.0` 快照；原远端当前不可公开读取 |
 
 ABNOTF 组合在本页称为“实际构建树”，仅表示它们是该构建指南给出的真实 clone 目标，不表示本仓库已经使用这套组合完成构建或设备测试。
@@ -189,6 +192,39 @@ ABNOTF 相对 LineageOS 的六个新增路径是 `configs/power/powerhint.json`�
 - zzkeier 和 ABNOTF 都在正常与 recovery 模块表中列入 `oplus_sync_fence.ko`；LineageOS 没有列入。
 - ABNOTF 切换到 Lineage libperfmgr，并增加本地 `powerhint.json`；另增加 DeviceAsWebcam overlay。
 - LineageOS 的 audio 配置包含较新的 AIDL interface 组合和 stub audio policy include；另两棵树的 audio 文件、fixup 与 proprietary 组合不同。
+
+## XDA A1 与 A3 的定向源码比较
+
+这部分按用户筛选结果只保留可复用源码，不评价论坛 ROM 本身。用户当前实机反馈是相机等功能已经可用，明显问题集中在指纹；因此 A1 帖中的旧相机故障反馈不外推到当前构建。
+
+### A1：`renhiyama` 源码组
+
+XDA A1 的公开源码入口包含：
+
+- [`android_device_oneplus_pagani@04be737`](https://github.com/renhiyama/android_device_oneplus_pagani/tree/04be737a8349ffe940addaa75f3ea8b7140c1fc6)，分支 `op13s`；
+- [`android_device_oneplus_sm8750-common@b83096a`](https://github.com/renhiyama/android_device_oneplus_sm8750-common/tree/b83096a7331d33a5732f38eb4bbfc4b781f54d87)，分支 `lineage-23.2`；
+- [`vendor_oplus_camera@563c432`](https://github.com/renhiyama/vendor_oplus_camera/tree/563c432ecd67c645cbc9ed20de7959d6173f5d34)，分支 `main`。该树包含 OPlus Camera APK、库和其他 proprietary 内容，本仓库只记录链接，不复制其中二进制，也不把它列为当前指纹问题的优先输入。
+
+机型树是本仓库已验证构建所用 Development `dfe9aa4` 的直接后代，之后有 58 个提交。其 `device.mk` 接入 `hardware/oplus` 的 `libudfps_extension.oplus`，设置 `qtidisplay.oplus_udfps=true`；OPlus framework overlay 声明 `org.lineageos.sensor.udfps` 长按传感器，但屏幕关闭 UDFPS 的两个布尔项仍被注释。
+
+common 树相对冻结 LineageOS `44ad18f` 的 merge base 为 `e0721a9406d4262bf10138c6f351bcaaac5c0347`；LineageOS 侧 13 个独有提交，renhiyama 侧 27 个。与指纹直接相关的源码自述包括：
+
+- 在指纹服务上同时链接 `libshims_aidl_fingerprint_v3.oplus.so` 与 `libshims_fingerprint.oplus.so`；注释称前者提供运行时传感器参数，后者处理解锁 bootloader 下的新指纹录入限制；
+- 新增 `vendor.oplus.biometrics.fingerprint.*` property context，并允许 `touchDaemon` 读取 `vendor_fingerprint_prop`；注释把它与 HBP/LHBM 协调、录入帧质量和 enrollment 停滞联系起来。
+
+以上均是冻结源码中的实现与注释，不是本仓库的设备验证结果。
+
+### A3：`Neveark` common 候选
+
+[`Neveark/android_device_oneplus_sm8750-common@86ca73e`](https://github.com/Neveark/android_device_oneplus_sm8750-common/tree/86ca73eaa40b6d06e2f9fd2a4336fd562aa101c9) 的冻结 HEAD 有 88 个 blob。它与 renhiyama common 的 merge base 同为 `e0721a9`；从该点起，renhiyama 侧 27 个独有提交，Neveark 侧 40 个，两个 HEAD 之间有 24 个路径发生新增、删除或修改。
+
+该 HEAD 会给 OPlus 指纹服务加入 `libshims_aidl_fingerprint_v3.oplus.so`，可作为传感器类型、坐标和尺寸参数路径的比较对象；但在此次冻结点没有 renhiyama 的第二个 enrollment shim，也没有其 `sepolicy/vendor/property_contexts` 与 `oplus_touchdaemon.te`。这里只记录差异，不判断哪一套组合正确，也不把仓库名称或 commit 标题当成指纹已修复证据。
+
+### 2.4 GHz 提交排重
+
+Neveark 历史中的 [`cb33454`](https://github.com/Neveark/android_device_oneplus_sm8750-common/commit/cb33454925ab2bec9eb4077a1cfeea4b9b86f3fa) 与已收录的 [`zzkeier@9280681`](https://github.com/zzkeier/android_device_oneplus_sm8750-common/commit/92806812c82f10d42ea663c1b6348c2a97294d7b) 具有相同作者日期、标题和两项语义改动：扩展 firmware 搜索目录，并加入两个 WCNSS 配置条目。两者因应用基线／上下文不同而具有不同 commit 与 patch ID，视为同一候选实现的移植，不重复登记为第二条修复。
+
+Neveark 随后的 [`4106c3d`](https://github.com/Neveark/android_device_oneplus_sm8750-common/commit/4106c3dba07896445fcbe251879e3143c6964847) 又移除了 `WCNSS_qcom_cfg_roam.ini` 与 `WCNSS_qcom_cfg_cmcc.ini` 两项 proprietary 条目，冻结 HEAD 仍保留扩展 firmware directory。后续验证仍以原始 zzkeier 链接为单一入口，同时记录 Neveark HEAD 的实际状态。
 
 ## TWRP recovery 树
 
