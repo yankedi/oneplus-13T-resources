@@ -36,6 +36,7 @@
 
 - [设备与版本基线](docs/device-baseline.md)
 - [LineageOS 23.2 构建、安装与硬件状态](docs/lineageos-23.2.md)
+- [2026-08-25 本地源码与构建产物审计](docs/local-build-audit-2026-08-25.md)
 - [TWRP 研究与实机验证](docs/twrp.md)
 - [GApps / NikGapps 事件记录](docs/gapps.md)
 - [备份与恢复边界](docs/backup-and-recovery.md)

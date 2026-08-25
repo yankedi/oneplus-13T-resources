@@ -1,6 +1,6 @@
 # OnePlus 13T 设备树比较
 
-最后核对：2026-08-24
+最后核对：2026-08-25
 
 本页比较已经收集或被构建指南明确引用的 OnePlus 13T（`PKX110` / `pagani`）设备树。比较只记录冻结提交、Git 历史、文件结构和配置差异，不判断哪套实现正确，也不把未测试来源提升为实机结论。
 
@@ -295,3 +295,19 @@ README 中写出的第二个补丁名是 `0002-tmp-hide-cameraid1-for-aperture.p
 - 不把 proprietary 列表中的路径当成可公开分发文件。
 - 不把 commit 标题当成 Wi-Fi、指纹、相机、HDR 或其他功能已经修复的设备证据。
 - 后续若采用任何一棵树，仍需在单独记录中固定完整 manifest、stock 来源、构建结果和设备测试。
+
+## 2026-08-25 本地构建树快照
+
+本次本地审计实际读取的是 [本地构建审计](local-build-audit-2026-08-25.md) 中的 `<LINEAGE_ROOT>`。六个冻结成功构建基线 commit 均重新确认；本地 dirty 变化不属于新的公开设备树组合，也没有覆盖既有候选比较。
+
+| 层 | 本地 HEAD | dirty 状态 | 与冻结基线的实际变化 |
+|---|---|---|---|
+| `device/oneplus/pagani` | `dfe9aa41e8154fc89dc217efae564bac6c376216` | 是 | pagani sepolicy、`qtidisplay.oplus_udfps`、camera AIDL prebuilt 冲突处理 |
+| `device/oneplus/sm8750-common` | `44ad18fa12b51983a36fb7ec67c54a6b4c032859` | 是 | `notify_fppress` ueventd 节点规则 |
+| `hardware/oplus` | `ec3b8211676f55ed09905c4c336356acedc040d3` | 否 | 无 |
+| `frameworks/base` | `aaa4284f7e061771afb58c789924397111487e62` | 是 | SystemUI `UdfpsController` 直接写入 `notify_fppress` |
+| `hardware/qcom-caf/sm8750/display/core` | `20cf597e21bdd31af4e3a55660e991e22f69bf8b` | 是 | fingerprint mask connector property |
+| `hardware/qcom-caf/sm8750/display/hal` | `4b74f47925c54e95c805275832a65830af0431b6` | 是 | `oplus_udfps` 编译宏和 include dirs |
+| kernel / DT / modules | `999b95d4` / `ebb25e35` / `eab0a34a` | 否 | 无 |
+
+`SOURCE_VERIFIED`：当前 `hardware/oplus` 仍只有共享 `SensorPropsShim` 和 `libudfps_extension.oplus`，没有 RandomLemon 候选的 `OplusFodShim.cpp`。因此本地 dirty SystemUI writer 与既有硬件 shim 候选是两条不同实现路径，不能合并描述为同一个已验证修复。
