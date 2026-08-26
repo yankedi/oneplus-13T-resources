@@ -4,7 +4,7 @@
 
 2026-08-25 的本地源码、dirty 状态、active 输出混合快照和重新验证结果见[本地构建审计](local-build-audit-2026-08-25.md)。本页的 2026-08-14 完整 OTA 和 2026-08-16 设备状态结论保持原时间截面，不被未重新打包的增量输出覆盖。
 
-2026-08-26 新增 [ARB1 Linux EDL 实机报告](edl-arb1-device-validation-2026-08-26.md)：从连贯的 2026-08-14 target-files 取出 Lineage recovery，通过 EDL 写入 `recovery_b`，首次失败经诊断修正后重试通过完整回读。随后普通 Android B 启动、Lineage Recovery `23.2-20260814-UNOFFICIAL-pagani` 启动身份及 root ADB 已确认；Recovery 日志存在显示提交和 `/data` 挂载警告，UI、触控、解密和备份恢复尚未完成验收。本次没有重装 ROM、刷写其他分区或改动 A 槽。
+2026-08-26 已通过 EDL 将连贯的 2026-08-14 Lineage recovery 写入 `recovery_b`，完整回读及 AVB 校验通过；Android B 和 Lineage Recovery 启动、root ADB 已确认。未改动其他分区，Recovery 全功能待验收。见 [ARB1 Linux EDL 实机报告](edl-arb1-device-validation-2026-08-26.md)。
 
 ## 构建产物
 

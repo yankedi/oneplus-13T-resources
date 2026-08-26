@@ -2,7 +2,7 @@
 
 更新时间：2026-08-26
 
-> **当前 B 槽状态更新（2026-08-26）**：`recovery_b` 已通过 EDL 从实读 TWRP 更换为 Lineage Recovery，100 MiB 完整回读及后续启动身份/root ADB 已确认。本页 TWRP 的 PASS 是下述旧环境的历史验收，不代表当前 B 槽仍是 TWRP；本轮没有恢复 TWRP 或重测 A 槽。详见 [ARB1 Linux EDL 实机报告](edl-arb1-device-validation-2026-08-26.md)。
+> **2026-08-26 更新**：B 槽现为 Lineage Recovery，EDL 完整回读、启动和 root ADB 已确认；本页 TWRP 的 PASS 仅指历史环境。见 [实机报告](edl-arb1-device-validation-2026-08-26.md)。
 
 ## 结论摘要
 

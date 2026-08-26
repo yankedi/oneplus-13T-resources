@@ -4,7 +4,7 @@
 
 > **当前状态：指定设备与文件的有限能力 `DEVICE_VERIFIED`；硬件 ARB 计数器、降级和通用救砖 `NOT_TESTED`。**
 >
-> 2026-08-25/26 已实读本机 `xbl_config_b` 的 ARB 1，并使用指定三文件在 Linux 下无在线授权进入 Firehose。UFS/GPT、受限读取、修正首次失败后的 `recovery_b` 写入和完整回读、普通重启均已实测；后续通过 Android ADB 启动 Lineage Recovery。`misc` 的 EDL 读取被拒，Recovery 全功能尚未验收。完整过程见 [实机验证报告](edl-arb1-device-validation-2026-08-26.md)。
+> 2026-08-25/26 已实读本机 `xbl_config_b` 的 ARB 1。指定三文件在 Linux 下免在线授权进入 Firehose，完成 UFS/GPT 查询、受限读取、`recovery_b` 写入与完整回读，并验证普通 Android B 和 Lineage Recovery 启动。[实机报告](edl-arb1-device-validation-2026-08-26.md)列出正确配置与注意事项。
 
 ## 来源与例外范围
 
@@ -81,4 +81,4 @@ Android 官方对 rollback protection 的定义是：在防篡改存储中记录
 
 ## 当前实测结论
 
-可以表述为“指定 ARB1 引导在本台 PKX110 上已验证无在线授权进入 Firehose、受限读写和正常退出”。不能缩写成“全分区免权限”“降级解锁”或“通用救砖”。首次写入未获最终 ACK 并留下旧 AVB footer；修正实际 `ZlpAwareHost` 配置和发送器分片解析后，重试才通过完整回读。原始失败、300 秒超时诊断、`misc` 权限限制和 Recovery 启动边界均见 [2026-08-26 实机报告](edl-arb1-device-validation-2026-08-26.md)。
+指定 ARB1 引导在本台 PKX110 上已验证免在线授权进入 Firehose、受限读写和正常退出。Linux TTY 使用实际 `ZlpAwareHost=0` 配置、支持 XML 分片的 sender，并要求最终 ACK 与完整回读。`misc` 的 EDL 读取不开放；降级、通用救砖和 Recovery 全功能未验证。见 [2026-08-26 实机报告](edl-arb1-device-validation-2026-08-26.md)。

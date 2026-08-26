@@ -46,13 +46,11 @@
 
 ### 2026-08-25/26：ARB1 EDL 与 Recovery 更新
 
-- Android root 与 EDL 两次通道读取的 `xbl_config_b` 完整哈希一致，独立解析得到 OEM metadata `3.0`、ARB `1`；这不是硬件回滚计数器读数。
-- 本次操作前的 `recovery_b` 实读为 TWRP，已保留双份独立读取及第二物理介质备份；不能从 2026-08-16 的槽位表假定它此前一直未变。
-- 指定三文件引导通过原生 Linux 工具进入 Firehose。首次 `recovery_b` 写入缺少最终 ACK，读回保留旧 AVB footer；诊断并修正后，重试的 100 MiB 写入/完整回读及非目标启动哨兵检查通过。
-- 后续经明确授权从 EDL 普通重启，Android 确认 `_b`、`sys.boot_completed=1`；再通过 ADB 启动 `23.2-20260814-UNOFFICIAL-pagani` Lineage Recovery，root ADB 可用，**不是 TWRP**。
-- Recovery 日志存在显示提交与 `/data` 挂载警告，UI/触控/解密/备份恢复没有完成验收。A 槽没有写入、切换或重新启动测试。
+- Android root 与 EDL 读取的 `xbl_config_b` 哈希一致，解析为 OEM metadata `3.0`、ARB `1`；硬件计数器未测。
+- Linux 下免在线授权进入 Firehose；备份原 TWRP 后，将 `recovery_b` 更换为 Lineage Recovery，100 MiB 完整回读、AVB 与非目标启动分区检查通过。
+- EDL 普通重启确认 Android B 启动完成，再经 ADB 启动 `23.2-20260814-UNOFFICIAL-pagani` Lineage Recovery，root ADB 可用。
 
-详见 [ARB1 Linux EDL 实机验证报告](edl-arb1-device-validation-2026-08-26.md)。本轮仅重新确认报告列出的项目，不把历史 bootloader、kernel 和 A 槽健康信息当作当前重新实测。
+A 槽未改动或重测；Recovery 全功能待验收。配置和注意事项见 [实机报告](edl-arb1-device-validation-2026-08-26.md)。
 
 ## 已验证的 Stock `.302` 资产
 

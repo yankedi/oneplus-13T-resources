@@ -22,11 +22,11 @@
 | Stock 历史基线 | `PKX110_15.0.2.302(CN01)`，Android 15；完整 OTA、payload 和已提取镜像完成哈希/签名校验 | 主机与实机确认 |
 | 当前救援槽 | 2026-08-16 时 slot A 为可启动的 ColorOS `16.0.3.501(CN01)`；同版本公开完整 OTA 已完成整体、payload 与选定分区哈希审计 | 实机确认 + 主机确认 |
 | 当前测试系统 | slot B 为 LineageOS 23.2 非官方构建 / Android 16；历史 kernel 6.6.142，2026-08-26 再次确认普通 Android B 启动完成 | 实机确认；未重测全部功能 |
-| Recovery / TWRP | TWRP 3.7.1_16 的历史非破坏性验收保留；2026-08-26 已通过 EDL 将 `recovery_b` 改为 Lineage Recovery，启动身份与 root ADB 已确认，UI/解密等尚未完整验收 | 实机确认；功能验收有边界 |
+| Recovery / TWRP | 2026-08-26 已通过 EDL 将 `recovery_b` 换为 Lineage Recovery；完整回读、启动及 root ADB 通过，UI/解密等待验收。TWRP 验收保留为历史记录 | 实机确认 |
 | 指纹 | UDFPS 录入仍失败；OPlus HAL 等待 UI-ready 约 502 ms 后以 vendor error `15001` 退出 | 实机日志确认 |
 | 蜂窝网络 | NR SA、数据和通话链路正常；低信号格主要是 AOSP NR 阈值/CarrierConfig 映射问题 | 实机日志确认 |
 | GApps 事件 | Google Clock 缺少两项 priv-app allowlist 权限造成 `system_server` 循环崩溃；随后 `UnInstall.zip` 流程移除了多项 Google 应用 | 实机日志确认 |
-| EDL / ARB | 实读 `xbl_config_b` 声明 ARB 1；指定引导在 Linux 下无在线授权进入 Firehose，完成 UFS/GPT、受限读取和 `recovery_b` 写入/完整回读；`misc` 读取被拒，硬件计数器和降级未测试 | 实机与主机确认；非任意分区可读写 |
+| EDL / ARB | 实读 `xbl_config_b` 声明 ARB 1；Linux 下免在线授权进入 Firehose、UFS/GPT 查询、受限读取及 `recovery_b` 写入/完整回读均已验证 | 实机与主机确认；权限及降级边界见报告 |
 
 完整状态见 [设备与版本基线](docs/device-baseline.md)、[LineageOS 记录](docs/lineageos-23.2.md) 和 [GApps 事件记录](docs/gapps.md)。
 
