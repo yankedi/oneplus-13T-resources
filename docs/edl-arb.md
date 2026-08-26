@@ -1,16 +1,16 @@
-# EDL、Firehose 与 ARB1 待验证引导
+# EDL、Firehose 与 ARB1 引导的验证边界
 
-更新时间：2026-08-24
+更新时间：2026-08-26
 
-> **当前状态：`COMMUNITY_CLAIM + HOST_VERIFIED_STRUCTURE + NOT_TESTED`**
+> **当前状态：指定设备与文件的有限能力 `DEVICE_VERIFIED`；硬件 ARB 计数器、降级和通用救砖 `NOT_TESTED`。**
 >
-> 本页记录一个待验证救援线索，不表示该组三文件已经在 PKX110 上成功进入 Firehose，更不表示可以安全降级或刷写。原压缩包及其中二进制不会进入仓库。
+> 2026-08-25/26 已实读本机 `xbl_config_b` 的 ARB 1，并使用指定三文件在 Linux 下无在线授权进入 Firehose。UFS/GPT、受限读取、修正首次失败后的 `recovery_b` 写入和完整回读、普通重启均已实测；后续通过 Android ADB 启动 Lineage Recovery。`misc` 的 EDL 读取被拒，Recovery 全功能尚未验收。完整过程见 [实机验证报告](edl-arb1-device-validation-2026-08-26.md)。
 
 ## 来源与例外范围
 
 本资料由仓库所有者归属给 CoolApk 用户 [“皓皓的小月”](https://www.coolapk.com/u/39276643)（用户 ID `39276643`），主题范围仅限 OnePlus 13T 的 ARB1 免授权 EDL/Firehose 引导。此次没有提供精确帖子 URL，且审计环境无法直接读取该个人主页，因此“账号—资料”的归属目前仍以仓库所有者提供的信息为依据。
 
-这是仓库对默认“排除 CoolApk 来源”规则设立的限定例外之一。例外仅允许保留归属、静态检查结果和待验证步骤，不扩展到该账号其他内容，也不把社区说法提升为实机事实。
+这是仓库对默认“排除 CoolApk 来源”规则设立的限定例外之一。范围仅限该组三文件的归属、检查与独立实测，不扩展到该账号其他内容。设备测试只能验证具体能力，不能反向证明账号归属或其他社区声明。
 
 ## 先区分四个概念
 
@@ -30,6 +30,7 @@ Android 官方对 rollback protection 的定义是：在防篡改存储中记录
 - **2025-11-27 左右**：XDA 出现 [OPPO/OnePlus/Realme Qualcomm Files Share](https://xdaforums.com/t/oppo-oneplus-realme-qualcomm-files-share.4769736/)。其后社区开始共享部分 OPLUS 高通机型的 programmer、digest 和 signature，并配合 EDL 工具尝试在无售后账号的情况下进入 Firehose。
 - **2026 年初**：社区报告逐渐出现两类变化：旧的公开 loader/流程在新固件上被拒绝或不再兼容；部分机型的新固件开始提升 ARB。没有找到将两者统一描述为同一机制的官方公告，因此这里只把它们记录为时间上相近、技术上独立的变化。
 - **OnePlus 13T 边界**：在 [OnePlus Anti-Rollback Checker](https://github.com/Bartixxx32/Oneplus-antirollchecker/tree/6088e36feb702925e21978aae2c3e030d148cfca) 的 2026-08-23 数据中，`PKX110_16.0.3.501(CN01)` 为 ARB `1`，`PKX110_16.0.2.400(CN01)` 为 ARB `0`。本仓库没有从 `.501` OTA 独立复算该值，因此将其记为公开来源交叉证据。
+- **2026-08-25/26 本机更新**：通过 Android root 和 EDL 分别读取完整 `xbl_config_b`，文件哈希一致；独立解析与字节核对均为 OEM metadata `3.0`、ARB `1`，有效内容匹配冻结 `.501` 镜像。这是已安装镜像值，不是熔丝/RPMB 计数器读数。指定三文件已完成下述有限实测。
 
 “ARB 熔断后无法通过 9008 深刷”不是准确表述。更新后 EDL/9008 入口可能仍存在；失效的可能是特定公开 programmer、签名材料或工具流程。官方售后仍可能使用受授权的工具，未来也可能出现兼容新版本的公开材料，但在实际验证前不能假定任何一组 loader 可用。
 
@@ -57,14 +58,16 @@ Android 官方对 rollback protection 的定义是：在防篡改存储中记录
 
 静态检查能确认 `devprg.elf` 含 OPLUS SM8750/Qualcomm 标识，三文件的角色也与公开 [OPLUS EDL Tool v2](https://github.com/salokrwhite/OplusEdlTool/tree/72999902af09e99c702866e0086482dc42b82bbb) 所需的 programmer、digest、signature 流程相符。
 
-静态检查**不能证明**这些文件的签名链会被 PKX110 `.501` 接受、能进入 Firehose、能正确识别 UFS/LUN，或不会触发其他安全状态；也没有证明文件的原始出处、再分发许可或供应链完整性。因此仓库只公开指纹和观察结果，不重新分发文件。
+静态检查本身**不能证明**文件会被设备接受、能识别 UFS/LUN，或不会触发其他安全状态。2026-08-26 的实测补充了本台设备入场、读取和单分区写入证据，但没有证明文件的原始出处、再分发许可、供应链完整性或其他设备兼容性。
 
-## 待验证用法
+原 ZIP 未提交；其中三文件已在既有提交 [`6f36c2b`](https://github.com/yankedi/oneplus-13T-resources/commit/6f36c2b3e4732c99b1ddbd8a7e83e7a8a4be820f) 归档至 [`resources/edl/arb1-sm8750/`](../resources/edl/arb1-sm8750/)。因此旧版“二进制不会进入仓库”的描述已过时。本次报告仅更新文档和索引，不新增或修改引导、认证文件、工具二进制或设备镜像。
 
-第一次只验证能否进入 Firehose，不做深刷：
+## 首次接入另一环境的安全边界
+
+本次成功不是对下一次操作的授权。另一环境第一次仍应只验证入场和安全只读，不直接照搬本次写入：
 
 1. 确认设备为 `PKX110`、记录完整固件和槽位，并核对三个文件的 SHA-256。
-2. 进入 9008 后，在工具中分别选择 `devprg.elf`、`digest.elf`、`sig.bin`，只执行 **Enter Firehose**。
+2. 提前建立独占的自动捕获流程，按已审计顺序使用三个文件，只验证进入 Firehose；Linux TTY 的实际 configure 必须匹配传输能力，不能照搬 Windows 的 ZLP 设置。
 3. Sahara 加载、Firehose 握手及一次只读 GPT/分区表枚举均成功，才能记为可用。
 4. 不执行 write、erase、rawprogram、OFP/OPS 或 ROM flash；保存脱敏日志后退出并确认双槽状态不变。
 
@@ -72,8 +75,10 @@ Android 官方对 rollback protection 的定义是：在防篡改存储中记录
 
 - programmer、digest、signature 或 authorization 被拒绝；不要通过随机换文件反复尝试。
 - 工具报告存储几何、UFS LUN、sector size 或目标平台不匹配。
-- 只能进入端口但 Firehose 命令无响应或会话反复断开。
+- 只能进入端口但 Firehose 命令无响应、缺少最终 ACK、raw-mode 边界不明或会话反复断开；此时不插入 XML 保活、不盲目重试。
 - 任何界面准备写入/擦除 `xbl`、`abl`、`tz`、`hyp`、`aop`、`modem`、NV、`persist`、`frp` 或 LUN5。
 - 任何方案要求把 `.302` / `.400` 的 ARB 0 启动组件写入当前 `.501` ARB 1 基线。
 
-当前所有设备侧项目仍为 `NOT_TESTED`。在 Sahara、Firehose、只读分区表和退出后启动状态均回填前，本资料不得简称为“已验证可用的 ARB1 免授权 9008”。
+## 当前实测结论
+
+可以表述为“指定 ARB1 引导在本台 PKX110 上已验证无在线授权进入 Firehose、受限读写和正常退出”。不能缩写成“全分区免权限”“降级解锁”或“通用救砖”。首次写入未获最终 ACK 并留下旧 AVB footer；修正实际 `ZlpAwareHost` 配置和发送器分片解析后，重试才通过完整回读。原始失败、300 秒超时诊断、`misc` 权限限制和 Recovery 启动边界均见 [2026-08-26 实机报告](edl-arb1-device-validation-2026-08-26.md)。

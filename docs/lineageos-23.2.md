@@ -1,8 +1,10 @@
 # LineageOS 23.2：构建、安装与硬件状态
 
-更新时间：2026-08-25
+更新时间：2026-08-26
 
 2026-08-25 的本地源码、dirty 状态、active 输出混合快照和重新验证结果见[本地构建审计](local-build-audit-2026-08-25.md)。本页的 2026-08-14 完整 OTA 和 2026-08-16 设备状态结论保持原时间截面，不被未重新打包的增量输出覆盖。
+
+2026-08-26 新增 [ARB1 Linux EDL 实机报告](edl-arb1-device-validation-2026-08-26.md)：从连贯的 2026-08-14 target-files 取出 Lineage recovery，通过 EDL 写入 `recovery_b`，首次失败经诊断修正后重试通过完整回读。随后普通 Android B 启动、Lineage Recovery `23.2-20260814-UNOFFICIAL-pagani` 启动身份及 root ADB 已确认；Recovery 日志存在显示提交和 `/data` 挂载警告，UI、触控、解密和备份恢复尚未完成验收。本次没有重装 ROM、刷写其他分区或改动 A 槽。
 
 ## 构建产物
 

@@ -1,6 +1,8 @@
 # TWRP 研究与实机验证
 
-更新时间：2026-08-23
+更新时间：2026-08-26
+
+> **当前 B 槽状态更新（2026-08-26）**：`recovery_b` 已通过 EDL 从实读 TWRP 更换为 Lineage Recovery，100 MiB 完整回读及后续启动身份/root ADB 已确认。本页 TWRP 的 PASS 是下述旧环境的历史验收，不代表当前 B 槽仍是 TWRP；本轮没有恢复 TWRP 或重测 A 槽。详见 [ARB1 Linux EDL 实机报告](edl-arb1-device-validation-2026-08-26.md)。
 
 ## 结论摘要
 
@@ -20,7 +22,7 @@
 
 本仓库的实机验收基于 `PKX110_15.0.2.302(CN01)`、slot B 和 TWRP `3.7.1_16-OnePlus_13_T`；未测试项目不会因上游声明而自动变成 `PASS`。
 
-## 非破坏性实机验收
+## 历史非破坏性实机验收
 
 | 项目 | 结果 |
 |---|---|
@@ -85,4 +87,3 @@ v3 证明 TWRP ramdisk、kernel、显示和触控链可以工作，但 bootconfi
 - 不要同时覆盖两个 recovery 槽；必须保留已知可启动槽和 stock/已验证镜像。
 - TWRP 能解密旧 ColorOS `/data` 不代表它适合为 Lineage 创建 userdata；本机已证明 TWRP Format Data 与当前 Lineage metadata-encryption 路径不兼容。
 - `fastbootd`、restore 和写入测试必须单独设计停止条件与回滚方案。
-

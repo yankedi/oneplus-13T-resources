@@ -1,5 +1,5 @@
 schema_version: 2
-last_checked: "2026-08-25"
+last_checked: "2026-08-26"
 collection_state:
   status: "CLOSED_AFTER_OWNER_REVIEW"
   closed_on: "2026-08-24"
@@ -22,6 +22,10 @@ source_policy:
     - "CoolApk posts, screenshots, reposts, and conclusions derived only from CoolApk, except the exact account and topic scope listed under community_source_exceptions"
   raw_artifacts_committed: false
   scoped_context_images_committed: true
+  scoped_edl_loader_archive:
+    path: "resources/edl/arb1-sm8750/"
+    existing_commit: "6f36c2b3e4732c99b1ddbd8a7e83e7a8a4be820f"
+    scope: "Existing three-file loader archive only; raw device evidence remains private and this report adds no binary or authentication material. Original provenance and redistribution rights are not established."
 
 stock_501_host_audit:
   document: "docs/stock-501-cross-audit.md"
@@ -135,9 +139,12 @@ community_source_exceptions:
     scope: "OnePlus 13T ARB1 authorization-free EDL/Firehose guide and the supplied three-file loader set only"
     exact_post_url: null
     attribution_basis: "provided by the repository owner; profile page could not be independently fetched during this audit"
-    status: "COMMUNITY_CLAIM + NOT_TESTED"
-    binary_redistribution: false
-    note: "This exception does not include other posts, screenshots, reposts, or claims from this account or platform."
+    status: "COMMUNITY_CLAIM for attribution; independently scoped DEVICE_VERIFIED results recorded separately"
+    binary_redistribution: true
+    binary_archive_commit: "6f36c2b3e4732c99b1ddbd8a7e83e7a8a4be820f"
+    redistribution_rights: "NOT_ESTABLISHED; archive presence is not proof of a license"
+    device_validation: "docs/edl-arb1-device-validation-2026-08-26.md"
+    note: "This exception does not include other posts, screenshots, reposts, or claims from this account or platform. Device success does not verify attribution or supply-chain provenance."
   - platform: "CoolApk"
     account_name: "爱干饭的圣徒 / 好好335"
     profile_url: null
@@ -486,18 +493,38 @@ edl_arb_references:
   - title: "OPLUS EDL Tool v2"
     url: "https://github.com/salokrwhite/OplusEdlTool"
     checked_commit: "72999902af09e99c702866e0086482dc42b82bbb"
-    checked_on: "2026-08-23"
-    status: "tool workflow reference; does not verify the supplied loader"
+    checked_on: "2026-08-26"
+    status: "SOURCE_VERIFIED workflow reference only; Windows program not executed; device results belong to the separate report"
+  - title: "Linux QSaharaServer and fh_loader base"
+    url: "https://github.com/bm16ton/oplus12r-edl"
+    checked_commit: "a6dceddd2ff74eabf0566ddbbb72e50d98826874"
+    checked_on: "2026-08-26"
+    status: "SOURCE_VERIFIED; native tools used with local patches and an explicitly matched ZLP configuration, not unmodified upstream compatibility"
+  - title: "arbextract parser"
+    url: "https://github.com/koaaN/arbextract"
+    checked_commit: "320efd96ded606b6bbf9c0c9d04ceb35caba32a6"
+    checked_on: "2026-08-25"
+    status: "HOST_VERIFIED on live xbl_config_b readout with independent byte-level cross-check; hardware rollback counter not read"
+  - title: "qdl issue 295: external-network partition guard after VIP"
+    url: "https://github.com/linux-msm/qdl/issues/295"
+    checked_on: "2026-08-26"
+    status: "SOURCE_VERIFIED discussion; UPSTREAM_CLAIM for another SM8650 environment, not this PKX110 programmer"
+    scope: "Targeted comparison for the observed misc denial; not a new general community collection cycle"
+    boundary: "VIP and programmer access restrictions are distinct; GPT-label workaround suggestions are not a verified PKX110 result"
   - title: "Android Verified Boot rollback protection"
     url: "https://source.android.com/docs/security/features/verifiedboot/verified-boot#rollback-protection"
     checked_on: "2026-08-23"
 
 unpublished_artifact_fingerprints:
-  - description: "User-supplied ARB1 authorization-free 9008 guide archive; statically inspected, not committed"
+  - description: "User-supplied ARB1 authorization-free 9008 guide ZIP remains uncommitted; its extracted three-file set was archived separately in an earlier commit"
     archive_name: "arb1免授权9008引导.zip"
     archive_size: 732455
     archive_sha256: "84b3354e31aefed4caa8832f09dbca726fb015e4ae50ddfd5e40694565799d0a"
-    status: "HOST_VERIFIED_STRUCTURE + NOT_TESTED_ON_DEVICE"
+    status: "HOST_VERIFIED hashes + scoped DEVICE_VERIFIED entry, reads and recovery_b program; not unrestricted access or downgrade support"
+    extracted_files_committed: true
+    extracted_files_path: "resources/edl/arb1-sm8750/"
+    extracted_files_commit: "6f36c2b3e4732c99b1ddbd8a7e83e7a8a4be820f"
+    device_validation: "docs/edl-arb1-device-validation-2026-08-26.md"
     files:
       - name: "devprg.elf"
         size: 1682200
@@ -514,6 +541,76 @@ unpublished_artifact_fingerprints:
     dimensions: "1536x1165"
     sha256: "df1fbdea4655cbd4097bc0c56cea9dc85c262e87bb0561429e945420a2b5ea61"
     status: "COMMUNITY_CONTEXT_ONLY"
+
+edl_arb1_device_validation:
+  document: "docs/edl-arb1-device-validation-2026-08-26.md"
+  tested_from: "2026-08-25"
+  checked_on: "2026-08-26"
+  timezone: "Asia/Hong_Kong"
+  status: "DEVICE_VERIFIED + HOST_VERIFIED, explicitly limited to listed operations"
+  environment:
+    device: "PKX110 / pagani / SM8750, slot B, Android 16 LineageOS baseline"
+    firmware: "Live xbl_config_b payload matches frozen .501 image; no fresh full-firmware inventory"
+    historical_only: "Unlocked bootloader, kernel 6.6.142 and slot A rescue health were not re-tested in this run"
+    host: "NixOS 26.05, Linux 7.1.10, x86_64, qcserial/TTY; no Windows program or Wine"
+    capture: "Pre-authorized root monitor, 20 ms polling, exclusive port lock; XML-boundary read-only keepalive every 25-30 seconds"
+  arb_readout:
+    partition: "xbl_config_b"
+    full_bytes: 409600
+    full_sha256: "a29081b7eb20752dee63efd21f6f984531e4560c153a09d115aab644736eda28"
+    payload_bytes: 360448
+    payload_sha256: "7b21574f864dda61a2cfcd16c8759723bdefd2fd03130a82d3eeab71f9771abf"
+    oem_metadata: "3.0"
+    declared_index: 1
+    evidence: "Android root and EDL full readouts match; parser and LE32 values at offset 0x56040 agree"
+    hardware_fuse_or_rpmb_counter: "NOT_TESTED"
+  native_tools:
+    base_commit: "a6dceddd2ff74eabf0566ddbbb72e50d98826874"
+    qsaharaserver_sha256: "09ec9ee19a18a792c809d7792813953514fc2560e4b7260c9ae58ef6dccd584a"
+    entry_and_first_sender_sha256: "b70932624deca5c5eb2953a19dabe7a76820168739eaef18bfe2b87acac4fe3c"
+    retry_transaction_sender_sha256: "35d1423b90a029905a8012888cbf8bfeef5463cc64cf0f9b60a136698bfc9378"
+    local_changes: "skip_configure; signature-only skip_signed_digest_ack; bounded fragmented XML accumulation; actual retry entry configure ZlpAwareHost=0"
+    patches_published_in_this_report: false
+    host_tests: "5-stage entry selftest, 3 full-size PTY cases, 6 parser boundaries, 16 transaction fault cases; not physical USB/UFS fault injection"
+  read_only_capture:
+    ufs: "SAMSUNG KLUEG4RHHD-B0G1, UFS 4.0 / 256 GB reported"
+    sector_bytes: 4096
+    lun_blocks: [61706240, 2048, 2048, 3072, 634880, 130048]
+    gpt_copies: 12
+    physical_partition_entries: 139
+    gpt_checks: "PASS: header/table CRC, main/backup agreement, range and overlap checks"
+    audited_read_requests: 19
+    successful_read_requests: 18
+    partial: "super first 1 MiB metadata only; devinfo first 4 KiB all zero; not a full backup or lock-state measurement"
+    misc: "FAIL: actual read sent; device NAK, read on misc:16392:256 not allowed on external network"
+    getsha256digest: "FAIL: Can't open sha256 handle 0; host hashes of readouts used instead"
+  recovery_b_write:
+    target_lun: 4
+    start_sector: 545704
+    sector_count: 25600
+    sector_bytes: 4096
+    bytes: 104857600
+    program_attempts_total: 2
+    program_attempts_in_successful_retry: 1
+    original_twrp_sha256: "133e83e4e4fb4fb3d1d6f42b510d6b1685c84a6fc605cff0645d6718c1f52ccb"
+    failed_readback_sha256: "81e74741271aaa6783a6f3576591839d342d859fc6c93a7762fc82ccf99647ca"
+    candidate_and_successful_readback_sha256: "e136fd6549526a92e2ac1c805c80d7762418448824f4e2d9ec11209dbfa9bef7"
+    candidate_source: "Coherent 2026-08-14 target-files IMAGES/recovery.img, not mixed active build output"
+    first_result: "FAIL: initial rawmode ACK but no final ACK; later full readout retained old AVB footer; no host reset issued in this failure path"
+    cause_grade: "HYPOTHESIS, high confidence: ZLP configuration mismatch and 300-second programmer timeout, corroborated by device timing plus source and original-instruction host tests; no bus capture"
+    retry_result: "PASS: final ACK rawmode=false, full 100 MiB byte/hash match, AVB content/signature and complete chain-key comparison"
+    unchanged_sentinels: ["boot_b", "vendor_boot_b", "dtbo_b", "init_boot_b", "vbmeta_b", "LUN4 primary GPT", "LUN4 backup GPT"]
+    backup: "Original TWRP independent full reads and second-physical-media copy retained privately; failed state separately backed up"
+  boot_checks:
+    edl_normal_reset: "DEVICE_VERIFIED: one authorized reset after keeper stopped; Android slot B boot_completed=1"
+    direct_edl_recovery: "NOT_TESTED: static power parser exposes reset/off/reset_to_edl, unknown values fall back to normal reset; no direct recovery branch found"
+    android_adb_recovery: "DEVICE_VERIFIED: Lineage Recovery 23.2-20260814-UNOFFICIAL-pagani, slot B, stable sampled processes, root ADB; not TWRP"
+    recovery_limit: "Atomic Commit failed and data mount/f2fs warnings remain; visible UI, touch, decryption and backup/restore not validated"
+    misc_android_read: "Full 1 MiB private backup succeeded through Android root; not an EDL permission bypass"
+    boot_side_effect: "Recovery itself writes/clears BCB; no claim of zero storage changes during boot"
+    last_observed: "Lineage Recovery; EDL keeper stopped before normal reset; not a continuing online guarantee"
+  not_tested: ["hardware rollback counters", "downgrade or ARB bypass", "other partition writes", "erase", "power off", "reset_to_edl", "full-device backup/restore", "other devices or firmware", "full Recovery functionality"]
+  redistribution: "Only sanitized report and metadata added; no raw logs, device images, serials, private host paths, credentials or new binaries"
 
 committed_context_artifacts:
   - description: "User-supplied CoolApk discussion about OplusFodShim, AOD, screen-off fingerprint, and adjacent camera behavior"

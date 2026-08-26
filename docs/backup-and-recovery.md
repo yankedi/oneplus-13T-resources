@@ -1,6 +1,6 @@
 # 备份与恢复边界
 
-更新时间：2026-08-23
+更新时间：2026-08-26
 
 ## 已完成的备份基线
 
@@ -52,4 +52,14 @@
 
 任何真实恢复都必须根据当时槽位、firmware、metadata-encryption、bootloader 和安全状态重新设计。本页是资产与风险索引，不是可直接复制执行的命令清单。
 
-EDL/Firehose 只能增加一种访问分区的路径，不能绕过 ARB 的启动检查，也不能使低版本启动链变得安全。待验证的 ARB1 引导只允许先做只读枚举，详见 [`edl-arb.md`](edl-arb.md)。
+## 2026-08-26 EDL 单分区实验的备份与边界
+
+- 写入前对原始 100 MiB TWRP `recovery_b` 做两次完整读取，并把一致的副本放到第二物理介质；SHA-256 为 `133e83e4e4fb4fb3d1d6f42b510d6b1685c84a6fc605cff0645d6718c1f52ccb`。
+- 首次写入缺少最终 ACK，随后两次 Android 读回确认旧 AVB footer 残留。这个失败状态单独保存，没有覆盖原始 TWRP 备份或把失败标为成功。
+- 经诊断和单独授权的重试只写 `recovery_b`；最终 ACK、100 MiB 完整回读、AVB 验证和五项 B 槽启动哨兵/LUN4 GPT 不变性检查通过。没有写 A、firmware、NV、userdata，没有 erase、格式化或切槽。
+- `misc` 的 EDL 读取被设备端拒绝；之后通过 Android root 才取得完整 1 MiB 私有备份。不能将后者登记为 EDL 能力，也不公开这份镜像。
+- 后续普通 Android B 与 Lineage Recovery 启动已确认；Recovery 显示/挂载日志仍有警告，完整恢复能力未验收。原始 TWRP 备份保留，但本轮没有实际恢复 TWRP。
+
+完整失败路径、修复证据与启动边界见 [ARB1 Linux EDL 实机报告](edl-arb1-device-validation-2026-08-26.md)。本次有限写入成功不是全盘恢复或任意分区可访问的证明，不能替代新的备份和权限确认。
+
+EDL/Firehose 只能增加一种访问分区的路径，不能据此认定 ARB 启动检查已被绕过，也不能使低版本启动链变得安全。另一环境首次接入仍应从安全只读验证开始，详见 [`edl-arb.md`](edl-arb.md)。

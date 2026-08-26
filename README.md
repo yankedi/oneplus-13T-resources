@@ -14,19 +14,19 @@
 
 ## 当前已知状态
 
-最后核验：**2026-08-24**。
+最后更新：**2026-08-26**。各项核验日期和适用范围以对应记录为准。
 
 | 项目 | 已确认结论 | 证据等级 |
 |---|---|---|
 | 设备身份 | OnePlus 13T；`PKX110` / `OP60F5L1` / `pagani`；SM8750 `sun`；project `24821` | 实机确认 |
 | Stock 历史基线 | `PKX110_15.0.2.302(CN01)`，Android 15；完整 OTA、payload 和已提取镜像完成哈希/签名校验 | 主机与实机确认 |
 | 当前救援槽 | 2026-08-16 时 slot A 为可启动的 ColorOS `16.0.3.501(CN01)`；同版本公开完整 OTA 已完成整体、payload 与选定分区哈希审计 | 实机确认 + 主机确认 |
-| 当前测试系统 | slot B 成功启动 LineageOS 23.2 非官方构建，Android 16，kernel 6.6.142 | 实机确认 |
-| TWRP | `recovery_b` 上的 TWRP 3.7.1_16 已通过启动、触控、ADB、FBE 解密、MTP 读取、OTG 等非破坏性测试 | 实机确认 |
+| 当前测试系统 | slot B 为 LineageOS 23.2 非官方构建 / Android 16；历史 kernel 6.6.142，2026-08-26 再次确认普通 Android B 启动完成 | 实机确认；未重测全部功能 |
+| Recovery / TWRP | TWRP 3.7.1_16 的历史非破坏性验收保留；2026-08-26 已通过 EDL 将 `recovery_b` 改为 Lineage Recovery，启动身份与 root ADB 已确认，UI/解密等尚未完整验收 | 实机确认；功能验收有边界 |
 | 指纹 | UDFPS 录入仍失败；OPlus HAL 等待 UI-ready 约 502 ms 后以 vendor error `15001` 退出 | 实机日志确认 |
 | 蜂窝网络 | NR SA、数据和通话链路正常；低信号格主要是 AOSP NR 阈值/CarrierConfig 映射问题 | 实机日志确认 |
 | GApps 事件 | Google Clock 缺少两项 priv-app allowlist 权限造成 `system_server` 循环崩溃；随后 `UnInstall.zip` 流程移除了多项 Google 应用 | 实机日志确认 |
-| EDL / ARB | `.501` 被公开固件分析列为 ARB 1；一组声称适用于 ARB1 的免授权 Firehose 引导已完成静态检查，但尚未在本机加载验证 | 来源交叉核对；设备未验证 |
+| EDL / ARB | 实读 `xbl_config_b` 声明 ARB 1；指定引导在 Linux 下无在线授权进入 Firehose，完成 UFS/GPT、受限读取和 `recovery_b` 写入/完整回读；`misc` 读取被拒，硬件计数器和降级未测试 | 实机与主机确认；非任意分区可读写 |
 
 完整状态见 [设备与版本基线](docs/device-baseline.md)、[LineageOS 记录](docs/lineageos-23.2.md) 和 [GApps 事件记录](docs/gapps.md)。
 
@@ -37,13 +37,14 @@
 - [设备与版本基线](docs/device-baseline.md)
 - [LineageOS 23.2 构建、安装与硬件状态](docs/lineageos-23.2.md)
 - [2026-08-25 本地源码与构建产物审计](docs/local-build-audit-2026-08-25.md)
+- [2026-08-26 ARB1 免在线授权 EDL：Linux 实机验证报告](docs/edl-arb1-device-validation-2026-08-26.md)
 - [TWRP 研究与实机验证](docs/twrp.md)
 - [GApps / NikGapps 事件记录](docs/gapps.md)
 - [备份与恢复边界](docs/backup-and-recovery.md)
 
 ### 高风险流程与社区参考
 
-- [EDL、Firehose 与 ARB1 待验证引导](docs/edl-arb.md)
+- [EDL、Firehose 与 ARB1 引导的验证边界](docs/edl-arb.md)
 - [PKX110 转 CPH2723 OxygenOS 社区流程参考](docs/oxygenos-conversion.md)
 - [OPlus / ColorOS 相机移植线索](docs/camera-porting-clue.md)
 
@@ -89,6 +90,7 @@
 - 不上传 ColorOS OTA、专有 vendor blobs、Google APK、未经脱敏的个人日志、备份镜像、密钥或设备标识。
 - 用户明确提供并要求归档的社区截图，只能作为有主题边界的上下文证据存入 `assets/community-clues/`；必须登记哈希和验证状态，不能单独证明功能可用。
 - 大型二进制不进入 Git 历史；必要时只记录可信来源、文件名、版本和校验值。
+- 既有提交 `6f36c2b` 已归档指定 ARB1 三文件至 `resources/edl/arb1-sm8750/`；这是限定的既有归档，不扩展到其他二进制或认证材料，也不代表其原始来源和再分发许可已获证明。本次实机报告仅更新文档与索引。
 - 不公开本机绝对路径、ADB 序列号、账户信息、SIM/Wi-Fi 信息或认证材料。
 - CoolApk（酷安）内容默认排除；目前只为 `data/source-index.yaml` 中逐条列出的 ARB1/EDL、相机、指纹和显示 HDR 线索设立有范围、可撤销的例外。例外不扩展到相关账号的其他内容，也不会把社区声明提升为实机事实。
 - 第三方仓库和文件各自遵循其原许可证；本仓库的链接不代表重新授权或背书。

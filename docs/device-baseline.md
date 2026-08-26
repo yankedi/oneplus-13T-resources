@@ -1,6 +1,6 @@
 # 设备与版本基线
 
-更新时间：2026-08-24
+更新时间：2026-08-26
 
 ## 设备身份
 
@@ -44,6 +44,16 @@
 - NikGapps Google Clock 的 priv-app allowlist 缺失导致 `system_server` 循环崩溃。
 - 后续执行的 `UnInstall.zip` 流程删除了 Google Dialer、Clock、Play Store、GMS 等组件。详见 [GApps 事件记录](gapps.md)。
 
+### 2026-08-25/26：ARB1 EDL 与 Recovery 更新
+
+- Android root 与 EDL 两次通道读取的 `xbl_config_b` 完整哈希一致，独立解析得到 OEM metadata `3.0`、ARB `1`；这不是硬件回滚计数器读数。
+- 本次操作前的 `recovery_b` 实读为 TWRP，已保留双份独立读取及第二物理介质备份；不能从 2026-08-16 的槽位表假定它此前一直未变。
+- 指定三文件引导通过原生 Linux 工具进入 Firehose。首次 `recovery_b` 写入缺少最终 ACK，读回保留旧 AVB footer；诊断并修正后，重试的 100 MiB 写入/完整回读及非目标启动哨兵检查通过。
+- 后续经明确授权从 EDL 普通重启，Android 确认 `_b`、`sys.boot_completed=1`；再通过 ADB 启动 `23.2-20260814-UNOFFICIAL-pagani` Lineage Recovery，root ADB 可用，**不是 TWRP**。
+- Recovery 日志存在显示提交与 `/data` 挂载警告，UI/触控/解密/备份恢复没有完成验收。A 槽没有写入、切换或重新启动测试。
+
+详见 [ARB1 Linux EDL 实机验证报告](edl-arb1-device-validation-2026-08-26.md)。本轮仅重新确认报告列出的项目，不把历史 bootloader、kernel 和 A 槽健康信息当作当前重新实测。
+
 ## 已验证的 Stock `.302` 资产
 
 | 资产 | SHA256 | 说明 |
@@ -68,7 +78,7 @@
 | `payload.bin` | 8,430,211,175 bytes | `9fdfc47e2f5a147d68f074e2fb2602a575eb5926d60d7a230892c01a2b40c88c` | 独立流式哈希与 `FILE_HASH` 一致 |
 | 选定的 11 个分区镜像 | 见交叉审计 | 各自与 payload manifest partition hash 一致 | `HOST_VERIFIED` |
 
-OTA 和提取镜像不进入 Git；仓库只记录哈希、路径、数量、冻结源码和结论。完整分区表及指纹、Wi-Fi、相机、运营商交叉结果见 [`.501` 原厂包与现有设备树交叉审计](stock-501-cross-audit.md)。这次提取没有独立复算 ARB rollback index，所以下文 ARB 证据等级不变。
+OTA 和提取镜像不进入 Git；仓库只记录哈希、路径、数量、冻结源码和结论。完整分区表及指纹、Wi-Fi、相机、运营商交叉结果见 [`.501` 原厂包与现有设备树交叉审计](stock-501-cross-audit.md)。2026-08-24 的这次公开 OTA 提取没有独立复算 ARB；后续已安装 `xbl_config_b` 的实读是另一项证据，见下文。
 
 ## Firmware 代际边界
 
@@ -83,15 +93,21 @@ OTA 和提取镜像不进入 Git；仓库只记录哈希、路径、数量、冻
 
 ## `.501` 的 ARB 边界
 
-公开的 OnePlus ARB 跟踪数据在 2026-08-23 将 `PKX110_16.0.3.501(CN01)` 标为 rollback index `1`，而 `PKX110_16.0.2.400(CN01)` 标为 `0`。这能作为版本边界的公开交叉证据，但本仓库尚未从本机 `.501` 固件独立提取并复算 ARB 元数据，因此状态是 `SOURCE_VERIFIED`，不是 `HOST_VERIFIED`。
+公开的 OnePlus ARB 跟踪数据在 2026-08-23 将 `PKX110_16.0.3.501(CN01)` 标为 rollback index `1`，而 `PKX110_16.0.2.400(CN01)` 标为 `0`，作为版本边界的 `SOURCE_VERIFIED` 交叉证据保留。
 
-ARB 约束的是设备是否接受更低 rollback index 的启动组件，并不等同于“9008 接口消失”或“任何 Firehose 都不可加载”。相关概念、社区时间线及待验证引导见 [EDL、Firehose 与 ARB1](edl-arb.md)。
+2026-08-25/26 已独立读取本机 `xbl_config_b` 并解析出 ARB `1`：完整 409600 字节 SHA-256 为 `a29081b7eb20752dee63efd21f6f984531e4560c153a09d115aab644736eda28`，有效内容与冻结 `.501` 镜像一致。证据为 `DEVICE_VERIFIED + HOST_VERIFIED`，但只证明已安装镜像声明值，熔丝/RPMB 计数器仍为 `NOT_TESTED`。
 
-## 最后已知槽位布局
+ARB 约束的是设备是否接受更低 rollback index 的启动组件，并不等同于“9008 接口消失”或“任何 Firehose 都不可加载”。相关概念、社区时间线和已实测范围见 [EDL、Firehose 与 ARB1](edl-arb.md)。
+
+## 历史槽位布局与最近更新
+
+以下表格保持 2026-08-16 的时间截面：
 
 | 槽位 | 系统 | Recovery | 健康状态（2026-08-16） |
 |---|---|---|---|
 | A | ColorOS `16.0.3.501(CN01)` | TWRP 3.7.1_16 | successful=yes，unbootable=no |
 | B | LineageOS 23.2 unofficial | Lineage Recovery | successful=yes，unbootable=no |
+
+2026-08-26 最近更新：本次操作前 B 槽 Recovery 实读为 TWRP，现已通过 EDL 更换为 Lineage Recovery 并实际启动；普通 Android B 启动也已确认。A 槽内容与 `successful/unbootable` 标志没有重新读取，不更新其历史健康结论。
 
 槽位状态会随 OTA、恢复、刷写和 bootloader 行为变化；任何后续操作前必须重新读取，不能永久依赖这张表。
