@@ -1,10 +1,12 @@
 # LineageOS 23.2：构建、安装与硬件状态
 
-更新时间：2026-08-26
+更新时间：2026-08-30
 
 2026-08-25 的本地源码、dirty 状态、active 输出混合快照和重新验证结果见[本地构建审计](local-build-audit-2026-08-25.md)。本页的 2026-08-14 完整 OTA 和 2026-08-16 设备状态结论保持原时间截面，不被未重新打包的增量输出覆盖。
 
 2026-08-26 已通过 EDL 将连贯的 2026-08-14 Lineage recovery 写入 `recovery_b`，完整回读及 AVB 校验通过；Android B 和 Lineage Recovery 启动、root ADB 已确认。未改动其他分区，Recovery 全功能待验收。见 [ARB1 Linux EDL 实机报告](edl-arb1-device-validation-2026-08-26.md)。
+
+2026-08-29 的同源构建已完成指纹相关 B 槽分区部署；完整录入、重启后亮屏认证、支付宝指纹登录/支付和 Google Play 支付验证通过。实现、提交、产物哈希和写入边界见[指纹修复与实机验证](fingerprint-fix-2026-08-30.md)。
 
 ## 构建产物
 
@@ -94,7 +96,7 @@
 | USB / ADB | PASS | 稳定 |
 | Charging | PASS | 基础充电状态正常 |
 | Display | PASS | 亮度与唤醒正常，UDFPS overlay 可显示 |
-| Fingerprint enrollment | FAIL | `waitUiready` 超时，vendor error `15001` |
+| Fingerprint enrollment | FAIL (`SUPERSEDED`) | 2026-08-16 时间截面为 `waitUiready` 超时和 `15001`；已由 2026-08-29 修复验证取代 |
 
 这里的 Camera `PASS` 只表示当前 AOSP/Lineage Camera provider、设备枚举和基础拍摄链工作，不表示 OPlus/ColorOS 原厂相机已经完成移植。关于 ColorOS ODM 文件和 OPlus framework 依赖的新增线索见 [OPlus / ColorOS 相机移植线索](camera-porting-clue.md)。
 
@@ -104,17 +106,13 @@
 
 该差异不在本次成功构建冻结的 `LineageOS/android_device_oneplus_sm8750-common@44ad18f` 中，尚未合入、构建或实机测试。具体文件变化和采用前检查项见[候选参考目录](pending-references.md#24-ghz-wi-fi--common-tree-候选修复)。
 
-## UDFPS 根因边界
+## UDFPS 修复结论
 
-已经确认：sensor、TA、vendor HAL、VINTF、framework provider 和 overlay 显示链存在；失败发生在 OPlus HAL 的 `waitUiready` 门。Settings enrollment 场景没有在约 502 ms 窗口内向 HAL 送达 `session.onUiReady()`。
+原故障的 `waitUiready` 约 502 ms 超时和 vendor error `15001` 已解决。最终没有替换指纹 APK、HAL、TA、firmware 或整棵 `hardware/oplus`，也没有屏蔽错误码。
 
-`.501` 文件级审计进一步确认：原厂 `init.oplus.display.rc` 会把 `notify_fppress` 设为 `system:system 0666`；冻结 common 会导入该 RC，冻结 `hardware/oplus` 也已有 fingerprint HAL 对 `/kernel/oplus_display` 通用类型的读写规则。因此第一优先级不是更换指纹 APK、vendor blob、firmware、预先堆叠 SELinux 规则或盲目忽略错误，而是补齐并验证：
+真实触摸 down/up 现在由 SM8750 OPlus 显示内核模块写入 `notify_fppress=1/0`；pagani 启用 QTI OPlus UDFPS，common 设备树设置精确节点权限，SystemUI 只在 finger-up、取消和 overlay 关闭路径补写 `0`。该顺序既让 HAL 及时收到 UI_READY，也清除了认证成功后可能缺失物理 finger-up 所造成的持续高亮。
 
-1. kernel 是否提供 `/sys/kernel/oplus_display/notify_fppress`；
-2. 现有 init ownership/mode 与通用 SELinux 链在实机是否生效，有无 AVC；
-3. 当前 v3 shim 中加入最小 `OplusFodShim` 事件桥后是否真实加载；
-4. finger-down/up、`notify_fppress`、`waitUiready`／`postUiready` 的顺序与取消/休眠清理；
-5. HBM、触控、手势、AOD 与解锁的回归。
+完整源码和证据见[2026-08-30 指纹修复报告](fingerprint-fix-2026-08-30.md)。AOD/熄屏认证仍为 `NOT_TESTED`。
 
 ## 蜂窝信号格
 

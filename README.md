@@ -14,16 +14,16 @@
 
 ## 当前已知状态
 
-最后更新：**2026-08-26**。各项核验日期和适用范围以对应记录为准。
+最后更新：**2026-08-30**。各项核验日期和适用范围以对应记录为准。
 
 | 项目 | 已确认结论 | 证据等级 |
 |---|---|---|
 | 设备身份 | OnePlus 13T；`PKX110` / `OP60F5L1` / `pagani`；SM8750 `sun`；project `24821` | 实机确认 |
 | Stock 历史基线 | `PKX110_15.0.2.302(CN01)`，Android 15；完整 OTA、payload 和已提取镜像完成哈希/签名校验 | 主机与实机确认 |
 | 当前救援槽 | 2026-08-16 时 slot A 为可启动的 ColorOS `16.0.3.501(CN01)`；同版本公开完整 OTA 已完成整体、payload 与选定分区哈希审计 | 实机确认 + 主机确认 |
-| 当前测试系统 | slot B 为 LineageOS 23.2 非官方构建 / Android 16；历史 kernel 6.6.142，2026-08-26 再次确认普通 Android B 启动完成 | 实机确认；未重测全部功能 |
+| 当前测试系统 | slot B 为 LineageOS 23.2 / Android 16；2026-08-29 同源构建的指纹相关 B 槽分区已部署并通过重启验证，未执行会覆盖 slot A 的标准 A/B OTA | 实机与主机确认；未重测全部功能 |
 | Recovery / TWRP | 2026-08-26 已通过 EDL 将 `recovery_b` 换为 Lineage Recovery；完整回读、启动及 root ADB 通过，UI/解密等待验收。TWRP 验收保留为历史记录 | 实机确认 |
-| 指纹 | UDFPS 录入仍失败；OPlus HAL 等待 UI-ready 约 502 ms 后以 vendor error `15001` 退出 | 实机日志确认 |
+| 指纹 | 完整录入、重启后亮屏认证、支付宝指纹登录/支付和 Google Play 支付验证通过；AOD/熄屏认证未测试 | `DEVICE_VERIFIED`；AOD `NOT_TESTED` |
 | 蜂窝网络 | NR SA、数据和通话链路正常；低信号格主要是 AOSP NR 阈值/CarrierConfig 映射问题 | 实机日志确认 |
 | GApps 事件 | Google Clock 缺少两项 priv-app allowlist 权限造成 `system_server` 循环崩溃；随后 `UnInstall.zip` 流程移除了多项 Google 应用 | 实机日志确认 |
 | EDL / ARB | 实读 `xbl_config_b` 声明 ARB 1；Linux 下免在线授权进入 Firehose、UFS/GPT 查询、受限读取及 `recovery_b` 写入/完整回读均已验证 | 实机与主机确认；权限及降级边界见报告 |
@@ -36,6 +36,7 @@
 
 - [设备与版本基线](docs/device-baseline.md)
 - [LineageOS 23.2 构建、安装与硬件状态](docs/lineageos-23.2.md)
+- [2026-08-30 LineageOS 指纹修复与实机验证](docs/fingerprint-fix-2026-08-30.md)
 - [2026-08-25 本地源码与构建产物审计](docs/local-build-audit-2026-08-25.md)
 - [2026-08-26 ARB1 免在线授权 EDL：Linux 实机验证报告](docs/edl-arb1-device-validation-2026-08-26.md)
 - [TWRP 研究与实机验证](docs/twrp.md)
@@ -99,7 +100,7 @@
 
 本轮主动外部资料收集已经结束。下面只安排对现有基线和已筛选参考的验证，不以继续堆积论坛链接为目标。
 
-1. 保留当前 SensorProps 与已存在的 stock init／通用 SELinux 访问链，定向移植 `OplusFodShim` 事件桥；先用节点上下文、AVC、加载证明和完整 UDFPS 场景做回归。
+1. UDFPS 录入、亮屏认证和支付验证已经完成；后续单独验证 AOD/熄屏认证、长时间 HBM 清理和更多第三方 BiometricPrompt 应用，不再引入第二个 `notify_fppress=1` writer。
 2. `.501` 未给出可直接复制的中国 NR 门限；继续追踪运行时 CarrierConfig 选择与 framework 行为，不把日本运营商、IMS RTP 或 LTE 属性表当成答案，也不更换 modem/firmware。
 3. 重新构建包含正确 Google Clock priv-app allowlist 的 GApps 方案，并以干净安装流程验证；临时 `log` 模式不能当永久修复。
 4. 为蓝牙配对、GNSS 实际定位、相机实拍和长时间通话补充可复现的实机记录。

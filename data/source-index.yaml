@@ -1,5 +1,5 @@
 schema_version: 2
-last_checked: "2026-08-26"
+last_checked: "2026-08-30"
 collection_state:
   status: "CLOSED_AFTER_OWNER_REVIEW"
   closed_on: "2026-08-24"
@@ -130,6 +130,74 @@ stock_501_host_audit:
     raw_ota_or_images_committed: false
     proprietary_files_committed: false
     committed_material: "paths, hashes, counts, source commits, configuration semantics, and conclusions only"
+
+fingerprint_fix_validation:
+  document: "docs/fingerprint-fix-2026-08-30.md"
+  checked_on: "2026-08-30"
+  device: "OnePlus 13T PKX110 / pagani"
+  system: "LineageOS 23.2 / Android 16 / slot B"
+  status: "DEVICE_VERIFIED + HOST_VERIFIED + SOURCE_VERIFIED"
+  build:
+    package: "lineage-23.2-20260829-UNOFFICIAL-pagani.zip"
+    size_bytes: 2503305953
+    sha256: "33bd6558ff19437f7436dde186623a617d7dcad971a4cdf62a141cd258a6f9c8"
+    package_signature: "PASS"
+    payload_signature_hash_and_size: "PASS"
+    avb_vintf_and_partition_capacity: "PASS"
+  deployment:
+    method: "B-only deployment of fingerprint-related partitions because standard A/B OTA would target protected inactive slot A"
+    partitions: ["system_ext_b", "vendor_b", "odm_b", "vendor_dlkm_b", "vbmeta_system_b", "vbmeta_vendor_b"]
+    slot_a_touched: false
+    boot_firmware_userdata_or_super_metadata_touched: false
+    rollback_super_size_bytes: 14956888064
+    rollback_super_sha256: "eb7e7b95e9681f3f8437e79d4f76ec07104e2d0adf6b44ca3f12f62f5c8324c1"
+  repositories:
+    - component: "frameworks/base"
+      fork_url: "https://github.com/yankedi/oneplus-13T_android_frameworks_base"
+      upstream_url: "https://github.com/LineageOS/android_frameworks_base"
+      fix_branch: "pagani-fingerprint-fix"
+      fix_commits: ["ed26e45fde9f3d6653e8e102f8ec24cd35864cdc"]
+      lineage_23_2_head: "b788900f949f2186de40c44c53492285e14a198c"
+      pre_merge_ahead_behind: "1 ahead, 3 behind upstream lineage-23.2"
+      upstream_commits_added: ["094652839e07653d9c20e5cd0d68f46a8747b372", "480e2fbe83e3dcf297cee0c13de3dea4b43fedb8", "68ee585f54bc11b13a250f0365d12c0b9c2e5cf2"]
+    - component: "device/oneplus/pagani"
+      fork_url: "https://github.com/yankedi/android_device_oneplus_pagani"
+      upstream_url: "https://github.com/OnePlus-13T-Development/android_device_oneplus_pagani"
+      fix_branch: "pagani-fingerprint-fix"
+      fix_commits: ["877593fbad05b453fca8dfd0a9e59daad6697f32", "2e389d031287343f1da3761b34354fd20ec5d6b0", "4d2cd9eb9ca7f1a19cc7d89c4722ba74d564152d"]
+      lineage_23_2_head: "4d2cd9eb9ca7f1a19cc7d89c4722ba74d564152d"
+      pre_merge_ahead_behind: "3 ahead, 0 behind upstream lineage-23.2"
+    - component: "device/oneplus/sm8750-common"
+      fork_url: "https://github.com/yankedi/android_device_oneplus-13T_common"
+      upstream_url: "https://github.com/LineageOS/android_device_oneplus_sm8750-common"
+      fix_branch: "pagani-fingerprint-fix"
+      fix_commits: ["62cf9629ebbbe7a9be97c20a9559fde0399e3218"]
+      lineage_23_2_head: "62cf9629ebbbe7a9be97c20a9559fde0399e3218"
+      pre_merge_ahead_behind: "1 ahead, 0 behind upstream lineage-23.2"
+    - component: "kernel/oneplus/sm8750-modules"
+      fork_url: "https://github.com/yankedi/android_kernel_oneplus-13T_sm8750-modules"
+      upstream_url: "https://github.com/LineageOS/android_kernel_oneplus_sm8750-modules"
+      fix_branch: "pagani-fingerprint-fix"
+      fix_commits: ["5b64073d036e19647310dc6671a91e77a834190e"]
+      lineage_23_2_head: "a9bb81bd2819a23ae56f3253981bae129313395f"
+      pre_merge_ahead_behind: "1 ahead, 1 behind upstream lineage-23.2"
+      upstream_commits_added: ["3613bfa7517a83f3a36bcb4677838f97dc102cad"]
+  implementation:
+    press_writer: "Kernel touch notifier is the only writer that asserts notify_fppress=1; it writes paired real down/up states"
+    cleanup_writer: "SystemUI writes only notify_fppress=0 on finger-up and overlay cleanup paths"
+    policy: "Dedicated sysfs_notify_fppress type; platform_app receives only parent search plus open/getattr/write on that node"
+    retained: "Existing SensorPropsShim, vendor fingerprint HAL, TA, firmware and OPlus HBM/display support"
+    excluded: "No OplusFodShim final integration, vendor error suppression, broad SELinux allow, firmware replacement or whole-tree hardware/oplus replacement"
+  verification:
+    enrollment: "PASS; empty-state enrollment remaining count 19 to 0"
+    authentication: "PASS; three strong authentications before reboot and two after reboot; template persisted"
+    hbm_pairing: "PASS; enrollment 24/24 and post-reboot authentication 2/2"
+    errors: "No 15001, relevant AVC, SystemUI/fingerprint fatal or tombstone observed"
+    alipay_fingerprint_login_and_payment: "PASS"
+    google_play_payment_verification: "PASS"
+    payment_evidence: "Device-owner observed application UI results; no payment-application diagnostic log was captured"
+    aod_or_screen_off_authentication: "NOT_TESTED"
+  boundary: "The verified device build predates the later upstream commits merged into the fork main branches; the merged main combination has not yet been rebuilt and flashed"
 
 community_source_exceptions:
   - platform: "CoolApk"
