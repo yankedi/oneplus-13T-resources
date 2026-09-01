@@ -1,12 +1,14 @@
 # LineageOS 23.2：构建、安装与硬件状态
 
-更新时间：2026-08-30
+更新时间：2026-09-01
 
 2026-08-25 的本地源码、dirty 状态、active 输出混合快照和重新验证结果见[本地构建审计](local-build-audit-2026-08-25.md)。本页的 2026-08-14 完整 OTA 和 2026-08-16 设备状态结论保持原时间截面，不被未重新打包的增量输出覆盖。
 
 2026-08-26 已通过 EDL 将连贯的 2026-08-14 Lineage recovery 写入 `recovery_b`，完整回读及 AVB 校验通过；Android B 和 Lineage Recovery 启动、root ADB 已确认。未改动其他分区，Recovery 全功能待验收。见 [ARB1 Linux EDL 实机报告](edl-arb1-device-validation-2026-08-26.md)。
 
 2026-08-29 的同源构建已完成指纹相关 B 槽分区部署；完整录入、重启后亮屏认证、支付宝指纹登录/支付和 Google Play 支付验证通过。实现、提交、产物哈希和写入边界见[指纹修复与实机验证](fingerprint-fix-2026-08-30.md)。
+
+2026-09-01 已从 `.501` 的 OPlus telephony framework 确认中国 ROM 的 NR 等级算法，并在 MCC 460 CarrierConfig 中固化。完整构建后仅向 slot B 写入 `product_b` 和 `vbmeta_system_b`；两个订阅连续 60 轮均从 level 2 修正为 level 4。见[中国 NR 信号等级修复与实机验证](china-nr-signal-fix-2026-09-01.md)。
 
 ## 构建产物
 
@@ -116,11 +118,11 @@
 
 ## 蜂窝信号格
 
-当时 60 秒采样为 NR SA n1，ssRSRP 中位数约 `-88 dBm`、ssRSRQ `-12 dB`，数据正常；UI 报告 level 2。运行时采用 AOSP 默认 NR SSRSRP 阈值 `[-110, -90, -80, -65]`，且没有有效的 OPlus product CarrierSettings。
+刷入前 60 秒采样为 NR SA，两个订阅平滑 SSRSRP 均约 `-90 dBm`，数据正常，但 framework 连续 60 轮均报告 level 2；运行时采用 AOSP 默认 NR SSRSRP 门限 `[-110, -90, -80, -65]`。
 
-`.501` 的进一步结果是：官方 common overlay 的中国运营商 LTE 门限与当前 Lineage 对应块一致；OPlus overlay 中发现的 NR SSRSRP/SSSINR 门限属于日本运营商块，CMCC、CU、CT、CBN 块没有同类表。`ro.oplus.radio.lte_rsrp_thresholds` 是 ColorOS LTE 属性，而 `oplus_carrier_ims_rtp_redun_*` 是 IMS 媒体质量门限，两者都不能直接当成中国 NR 状态栏门限。
+早期 CarrierConfig APK 审计没有在中国运营商块中找到 NR 门限。继续提取 `.501` 的 `oplus-telephony-common-ext.jar` 后确认，`OplusSignalStrengthStandard.getNrLevel()` 直接复用 LTE 等级算法，其默认边界为 `-126,-121,-114,-105,-44`。AOSP 只接受四个等级边界，`-44` 是有效上限，因此 MCC 460 配置为 `[-126, -121, -114, -105]`。
 
-因此结论仍是 **RF 正常，bar mapping/config 有缺口**，但 `.501` 没有给出一个可直接复制的中国 NR 阈值答案。修复应继续检查运行时 CarrierConfig 选择和当前 framework 行为，不能通过替换 modem/RIL/早期 firmware 解决。文件级证据见 [`.501` 交叉审计](stock-501-cross-audit.md#运营商与信号格)。
+完整构建并部署 `product_b`、`vbmeta_system_b` 后，两个订阅的有效 CarrierConfig 均为新门限，连续 60 轮 framework level 均为 4，驻网和数据连接保持正常。修复提交为 [`42e94f0`](https://github.com/yankedi/android_device_oneplus-13T_common/commit/42e94f0e61f63c9622a6bfc90878098da682f7f1)。该结果只证明显示等级映射修复，不表示射频性能提升；完整证据和适用边界见[信号修复报告](china-nr-signal-fix-2026-09-01.md)。
 
 ## 不应直接移植的内容
 

@@ -1,6 +1,6 @@
 # OnePlus 13T LineageOS 指纹修复与实机验证
 
-更新时间：2026-08-30
+更新时间：2026-09-01（验证发生于 2026-08-29/30）
 
 ## 结论
 
@@ -21,14 +21,14 @@
 
 LineageOS 是由 `repo` manifest 组合的多 Git 仓库源码树。本次修复跨越 Framework、pagani 设备配置、SM8750 公共配置和内核模块，因此分别固化到四个 Fork：
 
-| 层 | Fork | 上游 | 功能分支提交 | `lineage-23.2` HEAD |
+| 层 | Fork | 上游 | 修复提交 | `lineage-23.2` HEAD |
 |---|---|---|---|---|
 | SystemUI | [`yankedi/oneplus-13T_android_frameworks_base`](https://github.com/yankedi/oneplus-13T_android_frameworks_base) | [`LineageOS/android_frameworks_base`](https://github.com/LineageOS/android_frameworks_base) | `ed26e45fde9f` | `b788900f949f2186de40c44c53492285e14a198c` |
 | pagani 设备树 | [`yankedi/android_device_oneplus_pagani`](https://github.com/yankedi/android_device_oneplus_pagani) | [`OnePlus-13T-Development/android_device_oneplus_pagani`](https://github.com/OnePlus-13T-Development/android_device_oneplus_pagani) | `877593f`, `2e389d0`, `4d2cd9e` | `4d2cd9eb9ca7f1a19cc7d89c4722ba74d564152d` |
-| SM8750 公共设备树 | [`yankedi/android_device_oneplus-13T_common`](https://github.com/yankedi/android_device_oneplus-13T_common) | [`LineageOS/android_device_oneplus_sm8750-common`](https://github.com/LineageOS/android_device_oneplus_sm8750-common) | `62cf962` | `62cf9629ebbbe7a9be97c20a9559fde0399e3218` |
+| SM8750 公共设备树 | [`yankedi/android_device_oneplus-13T_common`](https://github.com/yankedi/android_device_oneplus-13T_common) | [`LineageOS/android_device_oneplus_sm8750-common`](https://github.com/LineageOS/android_device_oneplus_sm8750-common) | `62cf962` | `42e94f0e61f63c9622a6bfc90878098da682f7f1` |
 | SM8750 内核模块 | [`yankedi/android_kernel_oneplus-13T_sm8750-modules`](https://github.com/yankedi/android_kernel_oneplus-13T_sm8750-modules) | [`LineageOS/android_kernel_oneplus_sm8750-modules`](https://github.com/LineageOS/android_kernel_oneplus_sm8750-modules) | `5b64073` | `a9bb81bd2819a23ae56f3253981bae129313395f` |
 
-四个 Fork 都保留 `pagani-fingerprint-fix` 功能分支，修复已于 2026-08-30 合并到各自的 `lineage-23.2`。合并没有使用强推。
+四个 Fork 统一以 `lineage-23.2` 作为构建和提交分支。指纹提交均已包含在该分支；历史 `pagani-fingerprint-fix` 只是合并前的临时指针，删除它不会删除已合并的提交，也不是构建依赖。合并没有使用强推。SM8750 公共设备树主分支随后增加了已验证的中国 NR 信号等级修复 `42e94f0`。
 
 ### 各提交职责
 

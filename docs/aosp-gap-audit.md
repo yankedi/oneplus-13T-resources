@@ -2,7 +2,7 @@
 
 最后核对：2026-08-24
 
-> **后续状态（2026-08-30）**：本页的 UDFPS 缺口判断属于修复前快照。真实触摸驱动的 `notify_fppress` 路径、精确 SELinux 规则和 SystemUI cleanup-only writer 已完成构建与实机验证；当前结论见[指纹修复与实机验证](fingerprint-fix-2026-08-30.md)。其余子系统审计仍保持原时间截面。
+> **后续状态（2026-09-01）**：本页的 UDFPS 和 NR 信号格缺口判断属于修复前快照。指纹事件链与 MCC 460 NR 等级映射均已完成构建和实机验证；当前结论分别见[指纹修复与实机验证](fingerprint-fix-2026-08-30.md)和[中国 NR 信号等级修复](china-nr-signal-fix-2026-09-01.md)。其余子系统审计仍保持原时间截面。
 
 本页回答一个窄问题：当前已成功启动的 LineageOS 23.2 源码，与 OnePlus 13T 社区参考实现相比，哪些差异值得继续验证。它不是把另一个设备树整体移植过来的清单。
 
@@ -57,7 +57,7 @@
 
 1. **UDFPS UI-ready / `notify_fppress` 链路（P0）**：现象是 HAL 等待约 502 ms 后返回错误 `15001`。`.501` 与冻结源码交叉结果表明 stock display rc 和 fingerprint HAL 的通用节点访问链已经存在，第一轮应保留当前 SensorProps，只定向移植 RandomLemon 的 `OplusFodShim`／构建接线；先采集节点上下文和 AVC，再决定是否需要新增规则。
 2. **指纹手势抢占与休眠遮罩清理（P1）**：与主故障拆开验证，避免将生命周期修复和错误屏蔽混在一起。
-3. **CarrierSettings / NR 信号格映射（P1）**：设备已能 NR SA 通话和数据；`.501` 的中国运营商块没有可直接移植的 NR 门限，不能把日本运营商或 IMS RTP 表挪作答案，继续追踪运行时配置选择与 framework 行为。
+3. **CarrierSettings / NR 信号格映射（已完成）**：早期 CarrierConfig APK 审计没有在中国运营商块找到 NR 表；后续从 `.501` OPlus telephony framework 证实 NR 复用 `-126,-121,-114,-105,-44` 的 LTE 等级算法。MCC 460 四门限配置已通过完整构建和实机验证，见[信号修复报告](china-nr-signal-fix-2026-09-01.md)。
 4. **可选体验项（P1/P2）**：LTPO 控制、PlusKey、蓝牙配对和 GNSS 首次定位，仅在取得设备证据后处理。
 
 ## 明确不做

@@ -1,6 +1,6 @@
 # `.501` 原厂包与现有设备树交叉审计
 
-最后核对：2026-08-24
+最后核对：2026-09-01（原始交叉审计：2026-08-24；信号 framework 补充：2026-09-01）
 
 本页把当前已成功启动的 OnePlus 13T LineageOS 23.2 冻结源码、已筛选的设备树／`hardware/oplus` 候选，以及与 slot A 同版本的 `PKX110_16.0.3.501(CN01)` 公开完整 OTA 放到同一证据链中。目标是缩小现有问题的源码范围，不是从原厂包拼装可刷写镜像，也不是证明任何候选已经修复实机。
 
@@ -10,7 +10,7 @@
 2. **指纹仍是 P0，但现有节点访问基础比预想完整。** 现有日志把故障限定在 UFF HAL 的 UI-ready／`notify_fppress` 门：等待约 502 ms 后返回 vendor error `15001`。`.501` 的 display init 脚本会把该节点设为 `system:system 0666`；冻结 Lineage common 会导入这份脚本，`hardware/oplus` 也已有 fingerprint HAL 对 `vendor_sysfs_graphics` 的读写规则。第一轮候选应只移植 RandomLemon 的事件桥并验证现有访问链，只有实机出现权限错误时才补规则。
 3. **2.4 GHz Wi-Fi 是待复测候选，不是已确认故障。** `.501` 中三个 WCNSS 配置均存在，但正常启动脚本默认仍选择基础配置；zzkeier 提交加入额外文件和 firmware 搜索路径，却没有把普通运行路径明确切到它们。现有 Wi-Fi `PASS` 又没有记录频段，因此必须分频段验证实际加载文件。
 4. **相机清单与 `.501` 对齐，不是当前优先替换项。** 当前构建已枚举四个 camera device 且基础拍摄通过；kinginu `.501` 标签下 101 个 ODM 文件与本次原厂包逐文件哈希一致，冻结 pagani 清单的 916 个相机相关路径也全部存在。它们证明来源与清单一致，不证明 ColorOS framework 功能已移植。
-5. **`.501` 没给出可直接照搬的中国 NR 信号格答案。** 官方 common overlay 与现有 Lineage 中国运营商块的 LTE 门限一致；OPlus overlay 中发现的 NR 门限属于日本运营商块，中国运营商块没有同类表。Google Clock 事件仍是权限 allowlist／安装流程问题，与设备树或原厂 vendor 分开处理。
+5. **后续 framework 审计已补全中国 NR 信号格答案。** 本页最初检查的 CarrierConfig APK 没有在中国运营商块列出 NR 表；2026-09-01 继续检查 `.501` 的 OPlus telephony framework 后确认，NR 复用默认 LTE 等级边界 `-126,-121,-114,-105,-44`。四个 AOSP 门限已固化并实机验证。Google Clock 事件仍是权限 allowlist／安装流程问题，与设备树或原厂 vendor 分开处理。
 
 ## 审计对象与证据边界
 
@@ -147,10 +147,10 @@ RandomLemon 与当前 LineageOS `hardware/oplus` 的 merge base 为 `dad4fa20642
 
 - `.501` 的 `CarrierConfigResCommon_Sys.apk` SHA-256 为 `336bdf48e7c91e7fb594ecdbe91f611d9c24e44b602964f5588c9d6039021559`。解出的中国运营商 LTE RSRP 表与冻结 Lineage common 对应块一致；部分 `.501` 差异是 NR availability 等其他键，不是中国 NR 信号格门限。
 - `.501` 的 `OplusCarrierConfig.apk` SHA-256 为 `a6e7694ab3004d7fe67f5ca834d81eb5c222494e89cfe54fb8038edfa2536dbf`。其中确有 `5g_nr_ssrsrp_thresholds_int_array`／`5g_nr_sssinr_thresholds_int_array`，但命中的是 SoftBank/KDDI 等日本运营商块；CMCC、CU、CT、CBN 块没有同类表。
-- `my_product/build.prop` 有 `ro.oplus.radio.lte_rsrp_thresholds=-126,-121,-114,-105,-44`，它是 OPlus LTE 属性，不应直接当成 AOSP NR SSRSRP 四级门限。
+- `my_product/build.prop` 有 `ro.oplus.radio.lte_rsrp_thresholds=-126,-121,-114,-105,-44`。单看属性名称不能证明 NR 行为；后续从同版本 `oplus-telephony-common-ext.jar` 确认 `getNrLevel()` 直接调用 `getLteLevel()`，才闭合了 NR 复用这组边界的证据链。
 - `CarrierConfigOverlay.platform.8750B.apk` 中的 RSRP/RSRQ/SINR 表名称属于 `oplus_carrier_ims_rtp_redun_*`，用于 IMS RTP 冗余／媒体质量判断，不是状态栏信号格。
 
-所以 `.501` 审计没有产生一个可直接移植的“中国 NR 门限表”。现有 `-88 dBm` 却显示 level 2 的观察仍应从运行时 CarrierConfig 选择、framework 使用的参数与 ROM UX 目标入手；不应改 modem 或把 IMS 门限挪作 UI 门限。
+本页最初的 CarrierConfig APK 审计没有产生可直接移植的“中国 NR 门限表”；该判断现已被更深一层的 OPlus framework 审计补充。AOSP 四门限数组采用 `[-126, -121, -114, -105]`，`-44` 仅作为有效上限。修复和刷入前后 60 轮实机对比见[中国 NR 信号等级修复报告](china-nr-signal-fix-2026-09-01.md)。仍不应改 modem 或把日本运营商、IMS 媒体门限挪作中国状态栏门限。
 
 ## 现有问题的处理顺序
 
@@ -158,7 +158,7 @@ RandomLemon 与当前 LineageOS `hardware/oplus` 的 merge base 为 `dad4fa20642
 |---|---|---|---|
 | P0 | 指纹录入 `15001` | UI-ready／OFP 事件桥缺口最符合日志 | 做上述最小候选构建与实机回归 |
 | P1 | 2.4 GHz Wi-Fi | 原厂文件存在，但候选加载机制与当前是否复现都未知 | 分别记录 2.4/5 GHz 连接、吞吐、重连与实际配置加载 |
-| P1 | NR 信号格偏低 | RF、数据和通话正常；`.501` 没有直接的中国 NR 门限答案 | 追踪运行时 CarrierConfig 与 framework，不碰 modem／早期 firmware |
+| DONE | NR 信号格偏低 | `.501` OPlus framework 的 NR 等级算法已确认，MCC 460 修复通过完整构建和实机验证 | 保持当前映射；后续只补外国 SIM、漫游和专用覆盖测试 |
 | P1 | GApps / Google Clock | priv-app allowlist 与安装流程问题 | 在干净构建中修权限并复测，不归因于 device tree |
 | P2 | 相机完整功能矩阵 | 四设备与基础拍摄已通过；ColorOS 功能不等于 AOSP 基础链 | 保留当前栈，只补实拍、HDR、变焦与长时录像测试 |
 | P2 | HDR display_config 线索 | 跨设备社区线索，尚无 pagani 复现 | 仅在实际 HDR 显示异常时定向核对原厂配置 |

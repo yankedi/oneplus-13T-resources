@@ -1,5 +1,5 @@
 schema_version: 2
-last_checked: "2026-08-30"
+last_checked: "2026-09-01"
 collection_state:
   status: "CLOSED_AFTER_OWNER_REVIEW"
   closed_on: "2026-08-24"
@@ -119,8 +119,11 @@ stock_501_host_audit:
   carrier_findings:
     carrier_config_common_apk_sha256: "336bdf48e7c91e7fb594ecdbe91f611d9c24e44b602964f5588c9d6039021559"
     oplus_carrier_config_apk_sha256: "a6e7694ab3004d7fe67f5ca834d81eb5c222494e89cfe54fb8038edfa2536dbf"
-    finding: "China LTE threshold blocks match the frozen common overlay; OPlus NR threshold arrays found are in Japanese operator blocks, not CMCC/CU/CT/CBN"
-    excluded_misreadings: "ro.oplus.radio.lte_rsrp_thresholds is LTE/ColorOS-specific; oplus_carrier_ims_rtp_redun arrays are IMS media thresholds"
+    oplus_telephony_common_ext_jar_sha256: "bb240ae2059deac35d69d946998b23c523b6dd9c8e0b5e135bb3141b392a5529"
+    initial_carrier_config_finding: "China LTE threshold blocks match the frozen common overlay; OPlus NR threshold arrays found in CarrierConfig are in Japanese operator blocks, not CMCC/CU/CT/CBN"
+    framework_followup: "OplusSignalStrengthStandard.getNrLevel delegates to getLteLevel; the .501 default and hardcoded boundaries are -126,-121,-114,-105,-44"
+    aosp_mapping: "Use the first four values as KEY_5G_NR_SSRSRP_THRESHOLDS_INT_ARRAY; -44 is the valid upper bound, not a fifth AOSP threshold"
+    excluded_misreadings: "oplus_carrier_ims_rtp_redun arrays remain IMS media thresholds and were not used"
   tools:
     payload_dumper: "vm03/payload_dumper@2f0a964b8b77c6244e3e12735f85539c938f9c97"
     erofs_utils: "1.7.1"
@@ -155,7 +158,8 @@ fingerprint_fix_validation:
     - component: "frameworks/base"
       fork_url: "https://github.com/yankedi/oneplus-13T_android_frameworks_base"
       upstream_url: "https://github.com/LineageOS/android_frameworks_base"
-      fix_branch: "pagani-fingerprint-fix"
+      historical_fix_branch: "pagani-fingerprint-fix"
+      canonical_branch: "lineage-23.2"
       fix_commits: ["ed26e45fde9f3d6653e8e102f8ec24cd35864cdc"]
       lineage_23_2_head: "b788900f949f2186de40c44c53492285e14a198c"
       pre_merge_ahead_behind: "1 ahead, 3 behind upstream lineage-23.2"
@@ -163,21 +167,24 @@ fingerprint_fix_validation:
     - component: "device/oneplus/pagani"
       fork_url: "https://github.com/yankedi/android_device_oneplus_pagani"
       upstream_url: "https://github.com/OnePlus-13T-Development/android_device_oneplus_pagani"
-      fix_branch: "pagani-fingerprint-fix"
+      historical_fix_branch: "pagani-fingerprint-fix"
+      canonical_branch: "lineage-23.2"
       fix_commits: ["877593fbad05b453fca8dfd0a9e59daad6697f32", "2e389d031287343f1da3761b34354fd20ec5d6b0", "4d2cd9eb9ca7f1a19cc7d89c4722ba74d564152d"]
       lineage_23_2_head: "4d2cd9eb9ca7f1a19cc7d89c4722ba74d564152d"
       pre_merge_ahead_behind: "3 ahead, 0 behind upstream lineage-23.2"
     - component: "device/oneplus/sm8750-common"
       fork_url: "https://github.com/yankedi/android_device_oneplus-13T_common"
       upstream_url: "https://github.com/LineageOS/android_device_oneplus_sm8750-common"
-      fix_branch: "pagani-fingerprint-fix"
+      historical_fix_branch: "pagani-fingerprint-fix"
+      canonical_branch: "lineage-23.2"
       fix_commits: ["62cf9629ebbbe7a9be97c20a9559fde0399e3218"]
-      lineage_23_2_head: "62cf9629ebbbe7a9be97c20a9559fde0399e3218"
+      lineage_23_2_head: "42e94f0e61f63c9622a6bfc90878098da682f7f1"
       pre_merge_ahead_behind: "1 ahead, 0 behind upstream lineage-23.2"
     - component: "kernel/oneplus/sm8750-modules"
       fork_url: "https://github.com/yankedi/android_kernel_oneplus-13T_sm8750-modules"
       upstream_url: "https://github.com/LineageOS/android_kernel_oneplus_sm8750-modules"
-      fix_branch: "pagani-fingerprint-fix"
+      historical_fix_branch: "pagani-fingerprint-fix"
+      canonical_branch: "lineage-23.2"
       fix_commits: ["5b64073d036e19647310dc6671a91e77a834190e"]
       lineage_23_2_head: "a9bb81bd2819a23ae56f3253981bae129313395f"
       pre_merge_ahead_behind: "1 ahead, 1 behind upstream lineage-23.2"
@@ -198,6 +205,53 @@ fingerprint_fix_validation:
     payment_evidence: "Device-owner observed application UI results; no payment-application diagnostic log was captured"
     aod_or_screen_off_authentication: "NOT_TESTED"
   boundary: "The verified device build predates the later upstream commits merged into the fork main branches; the merged main combination has not yet been rebuilt and flashed"
+
+china_nr_signal_fix_validation:
+  document: "docs/china-nr-signal-fix-2026-09-01.md"
+  checked_on: "2026-09-01"
+  device: "OnePlus 13T PKX110 / pagani"
+  system: "LineageOS 23.2 / Android 16 / slot B"
+  status: "SOURCE_VERIFIED + HOST_VERIFIED + DEVICE_VERIFIED"
+  source:
+    firmware: "PKX110_16.0.3.501(CN01)"
+    path: "system_ext/framework/oplus-telephony-common-ext.jar"
+    sha256: "bb240ae2059deac35d69d946998b23c523b6dd9c8e0b5e135bb3141b392a5529"
+    class: "com.oplus.internal.telephony.OplusSignalStrengthStandard"
+    finding: "getNrLevel delegates to getLteLevel; default thresholds are -126,-121,-114,-105,-44"
+    aosp_adaptation: "MCC 460 KEY_5G_NR_SSRSRP_THRESHOLDS_INT_ARRAY uses [-126,-121,-114,-105]; -44 is the valid upper bound"
+    exhaustive_integer_equivalence: "PASS for -140 through -44 dBm"
+  repository:
+    url: "https://github.com/yankedi/android_device_oneplus-13T_common"
+    branch: "lineage-23.2"
+    commit: "42e94f0e61f63c9622a6bfc90878098da682f7f1"
+    changed_path: "overlay/CarrierConfigResCommon/res/xml/vendor.xml"
+    scope: "MCC 460 only; other countries and more-specific carrier overrides remain intact"
+  build:
+    carrier_config_single_target: "PASS"
+    full_bacon: "PASS"
+    package: "lineage_pagani-ota.zip"
+    size_bytes: 2503306005
+    sha256: "9b612a1334e3c9fc419755154572b63afe27d901f4a4a53117cb5de0c2be0cff"
+    package_and_payload_signatures: "PASS"
+    carrier_config_apk_sha256: "c94004d76050c7f451ba8f70e4dfe5dbacde7011ae011a46518053302fa43bbc"
+    final_payload_apk_match: "PASS"
+    vintf_selinux_dynamic_partition_and_avb_checks: "PASS"
+  deployment:
+    partitions: ["product_b", "vbmeta_system_b"]
+    product_sha256: "47d2e5ce6256cef5e997b2250ccc6d8aa3094f68e2b34b946139c5b6af14e81b"
+    vbmeta_system_sha256: "7202bf24f2a96cb9c1f634f2ae0c69e511194cf479aa3cf8734b2c6cde6da661"
+    slot_a_touched: false
+    other_partitions_touched: false
+    boot_completed: true
+  before_after:
+    before_effective_thresholds: [-110, -90, -80, -65]
+    after_effective_thresholds: [-126, -121, -114, -105]
+    before_phone_0_level: "2 for 60/60 samples"
+    before_phone_1_level: "2 for 60/60 samples"
+    after_phone_0_level: "4 for 60/60 samples"
+    after_phone_1_level: "4 for 60/60 samples"
+    registration_and_data: "NR SA remained in service; Phone 0 data remained connected"
+  boundary: "Verifies framework display-level mapping, not RF gain; foreign SIM, roaming and carrier-specific overrides are not separately tested"
 
 community_source_exceptions:
   - platform: "CoolApk"
